@@ -1018,3 +1018,117 @@ a { color: var(--magenta); }
 .pedido__pie { grid-template-columns: minmax(0, 1fr); }
 .campo { min-width: 0; }
 .campo select, .campo input { width: 100%; min-width: 0; text-overflow: ellipsis; }
+
+
+/* =========================================================
+   Pantalla de carga
+   ========================================================= */
+.cargador { display: none; }
+.js .cargador {
+  position: fixed; inset: 0; z-index: 1000;
+  display: grid; place-items: center;
+  background: radial-gradient(ellipse 80% 70% at 50% 42%, #47122F 0%, #1C0C15 72%);
+  color: var(--blanco); overflow: hidden;
+  transition: transform 1000ms cubic-bezier(.76,0,.24,1), border-radius 1000ms cubic-bezier(.76,0,.24,1);
+  /* si el script no llegara, se quita sola */
+  animation: cargadorSeguro 0s linear 9s forwards;
+}
+@keyframes cargadorSeguro { to { visibility: hidden; opacity: 0; } }
+.cargador[hidden] { display: none !important; }
+.cargador.saliendo { transform: translateY(-104%); border-radius: 0 0 50% 50% / 0 0 24vh 24vh; }
+.cargador.saliendo .cargador__centro { opacity: 0; transform: translateY(-28px) scale(.96); }
+
+.cargador__aurora { position: absolute; inset: 0; pointer-events: none; }
+.cargador__aurora span {
+  position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%;
+  filter: blur(90px); opacity: .32;
+  animation: cargadorAurora 9s ease-in-out infinite alternate;
+}
+.cargador__aurora span:nth-child(1) { background: #C2185B; left: -22vmax; top: -26vmax; }
+.cargador__aurora span:nth-child(2) { background: #4E9A25; right: -26vmax; bottom: -30vmax; animation-delay: -4s; opacity: .22; }
+@keyframes cargadorAurora { to { translate: 8vmax 6vmax; scale: 1.15; } }
+
+.cargador__centro {
+  position: relative; display: grid; justify-items: center; gap: 1.1rem; padding: 2rem;
+  transition: opacity 420ms ease, transform 520ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* Corona que se dibuja sola */
+.cargador__corona {
+  width: clamp(86px, 18vw, 120px); height: auto; overflow: visible;
+  filter: drop-shadow(0 0 22px rgba(255,90,158,.45));
+  animation: cargadorFlota 3.2s ease-in-out 1.4s infinite;
+}
+.cargador__trazo, .cargador__base {
+  fill: none; stroke: url(#g-corona); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 180; stroke-dashoffset: 180;
+  animation: cargadorTrazo 1100ms cubic-bezier(.65,0,.35,1) 100ms forwards;
+}
+.cargador__base { stroke-dasharray: 40; stroke-dashoffset: 40; animation-delay: 900ms; animation-duration: 500ms; }
+.cargador__relleno { fill: url(#g-corona); opacity: 0; animation: cargadorAparece 700ms ease 1000ms forwards; }
+.cargador__joya {
+  fill: #FFF4C2; opacity: 0; transform-box: fill-box; transform-origin: center; scale: 0;
+  animation: cargadorJoya 520ms cubic-bezier(.2,.8,.2,1.5) forwards;
+  animation-delay: calc(1150ms + var(--j) * 110ms);
+}
+@keyframes cargadorTrazo { to { stroke-dashoffset: 0; } }
+@keyframes cargadorAparece { to { opacity: .28; } }
+@keyframes cargadorJoya { to { opacity: 1; scale: 1; } }
+@keyframes cargadorFlota { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+
+/* Marca: «La Reina» sube letra por letra */
+.cargador__marca { margin: 0; display: grid; justify-items: center; gap: .35rem; line-height: 1; }
+.cargador__reina {
+  display: inline-flex; overflow: hidden; padding: .08em .02em;
+  font: 700 clamp(2.4rem, 8vw, 3.6rem)/1 var(--fuente-titulo); color: #9ADB6E;
+}
+.cargador__reina span { display: inline-block; translate: 0 110%; animation: cargadorLetra 700ms cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(350ms + var(--i) * 55ms); }
+.cargador__reina .espacio { width: .28em; }
+.cargador__merceria {
+  font: 600 clamp(.85rem, 2.4vw, 1rem)/1 var(--fuente-texto); letter-spacing: .5em; text-transform: uppercase;
+  color: #FF9CC4; padding-left: .5em; opacity: 0;
+  animation: cargadorAparece2 700ms ease 900ms forwards;
+}
+@keyframes cargadorLetra { to { translate: 0 0; } }
+@keyframes cargadorAparece2 { to { opacity: 1; } }
+
+/* Barra con la carga real */
+.cargador__barra {
+  position: relative; width: min(280px, 64vw); height: 3px; margin-top: .9rem;
+  border-radius: 999px; background: rgba(255,255,255,.12); overflow: hidden;
+}
+.cargador__barra span {
+  position: absolute; inset: 0; transform: scaleX(0); transform-origin: left center;
+  background: linear-gradient(90deg, #8EDB5A, #FF5A9E);
+  box-shadow: 0 0 14px rgba(255,90,158,.8);
+}
+.cargador__estado {
+  display: flex; gap: .8rem; align-items: baseline; margin: 0;
+  font-size: .92rem; color: #E8CFDB; min-height: 1.4em;
+}
+.cargador__pct { font: 600 .95rem/1 var(--fuente-titulo); color: var(--blanco); font-variant-numeric: tabular-nums; min-width: 3ch; text-align: right; }
+
+/* Segunda visita en la misma sesión: más rápido */
+.cargador.rapido .cargador__trazo, .cargador.rapido .cargador__base { animation-duration: 450ms; animation-delay: 0ms; }
+.cargador.rapido .cargador__relleno { animation-delay: 300ms; }
+.cargador.rapido .cargador__joya { animation-delay: calc(350ms + var(--j) * 60ms); }
+.cargador.rapido .cargador__reina span { animation-delay: calc(100ms + var(--i) * 30ms); }
+.cargador.rapido .cargador__merceria { animation-delay: 300ms; }
+
+/* Mientras carga: la página no se mueve y la portada espera para entrar */
+html.cargando { overflow: hidden; }
+.js .portada__rejilla { transition: opacity 900ms ease 250ms, transform 1100ms cubic-bezier(.2,.8,.2,1) 250ms; }
+html.cargando .portada__rejilla { opacity: 0; transform: translateY(28px) scale(.985); }
+html.cargando .titulo-animado.partido .palabra { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .cargador { transition: opacity 300ms ease; }
+  .cargador.saliendo { transform: none; opacity: 0; }
+  .cargador *, .cargador__aurora span { animation: none !important; }
+  .cargador__trazo, .cargador__base { stroke-dashoffset: 0; }
+  .cargador__relleno { opacity: .28; }
+  .cargador__joya { opacity: 1; scale: 1; }
+  .cargador__reina span { translate: none; }
+  .cargador__merceria { opacity: 1; }
+  html.cargando .portada__rejilla { transform: none; }
+}

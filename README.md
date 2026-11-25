@@ -46,6 +46,10 @@ navegador de la persona (localStorage), no en ningún servidor.
 
 ## Animaciones
 
+Pantalla de carga de marca (`js/cargador.js`): la corona se dibuja, «La Reina» sube letra por letra y la barra
+sigue la carga real (página, fuentes, fotos y 3D). Dura al menos 1.6 s la primera vez para que se vea la marca,
+la mitad en las siguientes visitas de la sesión, y nunca más de 7 s; al terminar se levanta como un telón.
+
 Portada con aurora animada y título que aparece palabra por palabra, cinta de categorías, barra de progreso,
 cabecera que se compacta al bajar, botones «magnéticos», transición de la foto a la vista de cerca y bloques que
 entran suaves al bajar. Si la persona tiene activado «reducir movimiento» en su equipo, todo eso se apaga y el

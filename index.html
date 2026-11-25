@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,600;1,700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
-  <script>document.documentElement.classList.add("js");</script>
+  <script>document.documentElement.classList.add("js", "cargando");setTimeout(function(){document.documentElement.classList.remove("cargando");}, 9000);</script>
 
   <!-- Three.js para los productos en 3D (versión fija) -->
   <script type="importmap">
@@ -45,6 +45,34 @@
   </script>
 </head>
 <body>
+
+<!-- Pantalla de carga: la barra sigue la carga real (js/cargador.js) -->
+<div class="cargador" id="cargador">
+  <div class="cargador__aurora" aria-hidden="true"><span></span><span></span></div>
+  <div class="cargador__centro">
+    <svg class="cargador__corona" viewBox="0 0 64 64" aria-hidden="true">
+      <defs>
+        <linearGradient id="g-corona" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#8EDB5A"/><stop offset=".55" stop-color="#FF5A9E"/><stop offset="1" stop-color="#C2185B"/>
+        </linearGradient>
+      </defs>
+      <path class="cargador__relleno" d="M12 46 8 20l13 10 11-16 11 16 13-10-4 26Z"/>
+      <path class="cargador__trazo" d="M12 46 8 20l13 10 11-16 11 16 13-10-4 26Z"/>
+      <path class="cargador__base" d="M13 54h38"/>
+      <circle class="cargador__joya" style="--j:0" cx="8" cy="20" r="3"/>
+      <circle class="cargador__joya" style="--j:1" cx="32" cy="14" r="3.4"/>
+      <circle class="cargador__joya" style="--j:2" cx="56" cy="20" r="3"/>
+    </svg>
+    <p class="cargador__marca" aria-hidden="true">
+      <span class="cargador__reina"><span style="--i:0">L</span><span style="--i:1">a</span><span class="espacio" style="--i:2"> </span><span style="--i:3">R</span><span style="--i:4">e</span><span style="--i:5">i</span><span style="--i:6">n</span><span style="--i:7">a</span></span>
+      <span class="cargador__merceria">Mercería</span>
+    </p>
+    <div class="cargador__barra" aria-hidden="true"><span id="cargador-barra"></span></div>
+    <p class="cargador__estado" aria-hidden="true"><span id="cargador-texto">Abriendo la tienda…</span><span class="cargador__pct" id="cargador-pct">0%</span></p>
+    <p class="solo-lector" role="status" id="cargador-aviso">Cargando La Reina Mercería…</p>
+  </div>
+</div>
+<script src="js/cargador.js"></script>
 
 <!-- Íconos (trazos al estilo Lucide). Se usan con <svg class="icono"><use href="#i-..."/></svg> -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
