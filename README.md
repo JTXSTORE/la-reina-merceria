@@ -19,28 +19,23 @@ img/favicon.svg   ícono de la pestaña
 ## Vitrina (productos reales)
 
 Los 43 productos salen de las publicaciones de Instagram de @mercerialareina2 de octubre y noviembre de 2026,
-con el precio que tenían publicado. Para cambiar o agregar uno:
+con el precio que tenían publicado. Se muestran en un carrusel 3D (se desliza con el dedo, el mouse, las flechas
+o las miniaturas) con filtros por categoría. Para cambiar o agregar uno:
 
-1. Guarda la foto en `img/productos/` (mejor en `.webp` o `.jpg`, de unos 720 px de ancho).
+1. Guarda la foto en `img/productos/<nombre>.webp` (unos 1000 px de ancho) y una miniatura cuadrada de 200 px
+   con el mismo nombre en `img/productos/mini/`.
 2. En `js/productos.js` copia un bloque y cambia `categoria`, `nombre`, `precio`, `unidad`, `detalle`, `foto`,
    `instagram` y `fecha`. Las categorías y sus filtros se arman solos.
 
-Al tocar un producto se abre en grande: se gira arrastrando, se acerca con doble toque y, en celular, se puede
-mover inclinando el teléfono.
+Al tocar el producto del centro se abre en grande: se gira arrastrando, se acerca con doble toque y, en celular,
+se puede mover inclinando el teléfono.
 
-## Productos en 3D
+## Productos reales en 3D
 
-El 3D usa [Three.js](https://threejs.org) 0.185.1 desde jsDelivr (versión fija en el `importmap` de `index.html`).
-Los siete productos (flor dorada, collar de perlas, carrete de hilo, botones, vela de soya, jabón artesanal y greca)
-están modelados con código en `js/tienda3d.js`, en la lista `PRODUCTOS`: ahí se cambian nombres, textos y colores.
-
-Para mostrar un producto **real** escaneado en 3D:
-
-1. Escanearlo con el celular (por ejemplo Polycam o Luma AI) y exportarlo como `.glb`.
-2. Guardarlo en una carpeta `modelos/` (por ejemplo `modelos/vela.glb`).
-3. En `PRODUCTOS`, poner `modelo: "modelos/vela.glb"` en ese producto.
-
-Si el navegador no puede mostrar 3D, la portada deja la ilustración y el showroom invita a escribir por WhatsApp.
+En el showroom «Tómalo en tus manos» hay tres productos de la tienda modelados en 3D a partir de sus fotos
+(`js/tienda3d.js`): la greca de 3 tazas (6 colores), el set collar y topos de trébol, y el collar chicle
+(rojo vino, ámbar o marrón, con dije de caracol, corazón o estrella de mar). En `js/productos.js`, el campo
+`tres: { id, opciones }` pone el botón «Ver en 3D» en la vitrina.
 
 ## Cambios frecuentes
 
@@ -48,7 +43,7 @@ Si el navegador no puede mostrar 3D, la portada deja la ilustración y el showro
 |---|---|
 | Número de WhatsApp | `js/main.js`, variable `WHATSAPP` (y los `href="https://wa.me/..."` de `index.html`) |
 | Aviso de ofertas (franja de arriba) | `index.html`, bloque `<div class="promo" data-hasta="AAAA-MM-DD">`. Se oculta solo después de esa fecha. |
-| Productos | `index.html`, sección `id="productos"` |
+| Productos de la vitrina | `js/productos.js` (fotos en `img/productos/` y `img/productos/mini/`) |
 | Sucursales, teléfonos y horario | `index.html`, sección `id="sucursales"` (hay un comentario `PENDIENTE` para el horario) |
 | Colores | `css/estilos.css`, variables al inicio (`--verde`, `--magenta`, …) |
 

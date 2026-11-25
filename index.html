@@ -206,14 +206,48 @@
         <header class="seccion__cabeza">
           <p class="etiqueta">Vitrina</p>
           <h2 id="vitrina-titulo">Lo que tenemos en tienda</h2>
-          <p>Toca cualquier producto para verlo de cerca y girarlo como si lo tuvieras en la mano.</p>
+          <p>Desliza para pasar los productos y toca el del centro para verlo de cerca.</p>
         </header>
         <p class="vitrina__nota">Precios publicados en nuestro Instagram en octubre y noviembre de 2026. Confirma existencia y precio por WhatsApp.</p>
       </div>
       <div class="vitrina__filtros" id="vitrina-filtros" role="group" aria-label="Filtrar por categoría"></div>
-      <ul class="vitrina__lista" id="vitrina-lista"></ul>
+    </div>
+
+    <div class="carrusel" role="region" aria-roledescription="carrusel" aria-label="Productos de la vitrina">
+      <div class="carrusel__escena" id="carrusel-escena"></div>
+      <button type="button" class="carrusel__nav carrusel__nav--ant" id="carrusel-ant" aria-label="Producto anterior">
+        <svg class="icono" aria-hidden="true" style="transform: rotate(180deg)"><use href="#i-flecha"/></svg>
+      </button>
+      <button type="button" class="carrusel__nav carrusel__nav--sig" id="carrusel-sig" aria-label="Producto siguiente">
+        <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg>
+      </button>
+    </div>
+
+    <div class="contenedor">
+      <div class="carrusel__info">
+        <div class="carrusel__texto">
+          <p class="carrusel__cat" id="carrusel-cat"></p>
+          <h3 class="carrusel__nombre" id="carrusel-nombre"></h3>
+          <p class="carrusel__precio"><span id="carrusel-precio"></span> <span class="carrusel__precio2" id="carrusel-precio2"></span></p>
+        </div>
+        <div class="carrusel__acciones">
+          <a class="boton boton--verde" id="carrusel-wa" href="https://wa.me/18092415077" target="_blank" rel="noopener">
+            <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Lo quiero
+          </a>
+          <button type="button" class="boton boton--borde" id="carrusel-lupa">
+            <svg class="icono" aria-hidden="true"><use href="#i-mano"/></svg>Ver de cerca
+          </button>
+          <button type="button" class="boton boton--magenta" id="carrusel-3d" hidden>
+            <svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D
+          </button>
+        </div>
+      </div>
+      <div class="carrusel__pie">
+        <p class="carrusel__contador" id="carrusel-contador" aria-live="polite"></p>
+        <div class="carrusel__minis" id="carrusel-mini" role="group" aria-label="Todos los productos"></div>
+      </div>
       <p class="vitrina__mas">
-        <a class="boton boton--borde" href="https://www.instagram.com/mercerialareina2/" target="_blank" rel="noopener">
+        <a class="enlace" href="https://www.instagram.com/mercerialareina2/" target="_blank" rel="noopener">
           <svg class="icono" aria-hidden="true"><use href="#i-instagram"/></svg>Ver más productos en Instagram
         </a>
       </p>
@@ -226,7 +260,7 @@
       <header class="seccion__cabeza">
         <p class="etiqueta etiqueta--clara">Showroom 3D</p>
         <h2 id="showroom-titulo">Tómalo en tus manos</h2>
-        <p>Gira cada producto con el dedo o el mouse, acércalo y míralo por todos lados, como si lo tuvieras en la tienda.</p>
+        <p>Productos de la tienda modelados en 3D: gíralos con el dedo o el mouse, acércalos y cambia el color, como si los tuvieras en la mano.</p>
       </header>
 
       <div class="visor">
@@ -256,9 +290,11 @@
         <div class="visor__chips" id="visor-chips" role="group" aria-label="Elige un producto"></div>
 
         <div class="visor__panel">
-          <p class="visor__categoria" id="visor-categoria">Bisutería</p>
-          <h3 class="visor__nombre" id="visor-nombre">Flor dorada</h3>
-          <p class="visor__desc" id="visor-desc">Pieza dorada de cinco pétalos con perla al centro, para aretes, collares y prendedores.</p>
+          <p class="visor__categoria" id="visor-categoria">Cocina y hogar</p>
+          <h3 class="visor__nombre" id="visor-nombre">Greca de 3 tazas</h3>
+          <p class="visor__precio" id="visor-precio">RD$760 cada una</p>
+          <p class="visor__desc" id="visor-desc">Con detalles plateados y asa con apariencia de madera. Elige el color y gírala.</p>
+          <div class="visor__variantes" id="visor-variantes"></div>
           <a class="boton boton--verde" id="visor-whatsapp" href="https://wa.me/18092415077" target="_blank" rel="noopener">
             <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Lo quiero: preguntar por WhatsApp
           </a>
@@ -403,6 +439,9 @@
         <a class="boton boton--borde" id="lupa-ig" href="https://www.instagram.com/mercerialareina2/" target="_blank" rel="noopener">
           <svg class="icono" aria-hidden="true"><use href="#i-instagram"/></svg>Ver en Instagram
         </a>
+        <button type="button" class="boton boton--magenta" id="lupa-3d" hidden>
+          <svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D
+        </button>
       </div>
       <p class="lupa__fecha" id="lupa-fecha"></p>
     </div>

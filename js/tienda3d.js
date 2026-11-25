@@ -12,6 +12,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { ParametricGeometry } from "three/addons/geometries/ParametricGeometry.js";
 
 const V2 = THREE.Vector2;
 const V3 = THREE.Vector3;
@@ -371,37 +372,327 @@ function crearFlor() {
   return g;
 }
 
-function crearGreca() {
+/* ---------------- Productos reales de la tienda ---------------- */
+
+const COLORES_GRECA = {
+  rosado: 0xf2a6c6, rojo: 0xd32128, verde: 0x5dbb2b, blanco: 0xf3f3f1, negro: 0x1c1c20, turquesa: 0x1fa2a0,
+};
+
+function texturaMadera() {
+  return textura(lienzo(256, 512, (x, w, h) => {
+    const g = x.createLinearGradient(0, 0, w, 0);
+    g.addColorStop(0, "#CFA06B");
+    g.addColorStop(1, "#B78450");
+    x.fillStyle = g;
+    x.fillRect(0, 0, w, h);
+    for (let i = 0; i < 36; i++) {
+      x.strokeStyle = `rgba(105, 66, 32, ${0.12 + (i % 5) * 0.06})`;
+      x.lineWidth = 1 + (i % 3);
+      x.beginPath();
+      const x0 = (i * 37) % w;
+      for (let y = 0; y <= h; y += 16) x.lineTo(x0 + Math.sin(y * 0.02 + i) * 6, y);
+      x.stroke();
+    }
+  }));
+}
+
+// Greca de 3 tazas: cuerpo octagonal pintado, tapa y aro plateados, asa y perilla imitación madera
+function crearGrecaReal(op = {}) {
   const g = new THREE.Group();
-  const acero = new THREE.MeshStandardMaterial({ color: 0xe6e8ec, metalness: 1, roughness: 0.2, flatShading: true });
-  const negro = new THREE.MeshStandardMaterial({ color: 0x1b1b1f, roughness: 0.45 });
+  const pintura = new THREE.MeshPhysicalMaterial({
+    color: COLORES_GRECA[op.color] ?? COLORES_GRECA.rosado,
+    metalness: 0.2, roughness: 0.38, clearcoat: 0.8, clearcoatRoughness: 0.18, flatShading: true,
+  });
+  const plata = new THREE.MeshStandardMaterial({ color: 0xe9ebef, metalness: 1, roughness: 0.16, flatShading: true });
+  const madera = new THREE.MeshStandardMaterial({ map: texturaMadera(), roughness: 0.6 });
+  const laton = new THREE.MeshStandardMaterial({ color: 0xc9a04a, metalness: 1, roughness: 0.3 });
+  const octo = (pts, mat) => new THREE.Mesh(
+    new THREE.LatheGeometry(pts.map(([r, y]) => new V2(r, y)), 8, Math.PI / 8), mat);
 
-  const cuerpo = new THREE.Mesh(new THREE.LatheGeometry([
-    new V2(0, -1.0), new V2(0.56, -1.0), new V2(0.62, -0.94),
-    new V2(0.5, -0.14), new V2(0.53, -0.14), new V2(0.53, 0.02), new V2(0.49, 0.02),
-    new V2(0.6, 0.82), new V2(0.63, 0.86), new V2(0.6, 0.9),
-    new V2(0.42, 0.98), new V2(0.15, 1.02), new V2(0, 1.02),
-  ], 8, Math.PI / 8), acero);
+  g.add(octo([[0, -1.0], [0.6, -1.0], [0.62, -0.97], [0.5, -0.12], [0, -0.12]], pintura));
+  g.add(octo([[0, -0.14], [0.52, -0.14], [0.535, -0.11], [0.535, 0.09], [0.52, 0.12], [0, 0.12]], plata));
+  g.add(octo([[0, 0.1], [0.5, 0.1], [0.6, 0.6], [0, 0.6]], pintura));
+  g.add(octo([[0, 0.58], [0.615, 0.58], [0.645, 0.62], [0.63, 0.68], [0.46, 0.85], [0.13, 0.92], [0, 0.92]], plata));
 
-  const perilla = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 0.14, 16), negro);
-  perilla.position.y = 1.09;
+  const perilla = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.095, 0.2, 20), madera);
+  perilla.position.y = 1.0;
+  const cupula = new THREE.Mesh(new THREE.SphereGeometry(0.075, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), madera);
+  cupula.position.y = 1.1;
 
   const asa = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-    new V3(-0.55, 0.74, 0), new V3(-0.92, 0.7, 0), new V3(-1.02, 0.45, 0),
-    new V3(-0.95, 0.15, 0), new V3(-0.5, 0.12, 0),
-  ]), 48, 0.07, 12), negro);
+    new V3(-0.58, 0.5, 0), new V3(-0.88, 0.58, 0), new V3(-1.04, 0.34, 0),
+    new V3(-0.98, 0.02, 0), new V3(-0.74, -0.16, 0),
+  ]), 64, 0.085, 16), madera);
+  const soporteAsa = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.14, 0.12), plata);
+  soporteAsa.position.set(-0.62, 0.5, 0);
 
-  const pico = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.28, 4), acero);
-  pico.rotation.z = -Math.PI / 2;
-  pico.position.set(0.66, 0.84, 0);
+  const pico = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.3, 4), plata);
+  pico.rotation.z = -Math.PI / 2 + 0.3;
+  pico.position.set(0.68, 0.62, 0);
 
-  g.add(cuerpo, perilla, asa, pico);
+  const valvula = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.05, 16), laton);
+  valvula.rotation.x = Math.PI / 2;
+  valvula.position.set(0, -0.6, 0.545);
+
+  g.add(perilla, cupula, asa, soporteAsa, pico, valvula);
+  return g;
+}
+
+// Trébol de cuatro hojas: cuatro círculos que se cruzan
+function formaTrebol(escala = 1) {
+  const r = 0.5 * escala;
+  const d = 0.55 * escala;
+  const a = THREE.MathUtils.degToRad(96);
+  const forma = new THREE.Shape();
+  for (let k = 0; k < 4; k++) {
+    const t = (k * Math.PI) / 2;
+    forma.absarc(Math.cos(t) * d, Math.sin(t) * d, r, t - a, t + a, false);
+  }
+  return forma;
+}
+
+function dijeTrebol(piedra, oro, escala) {
+  const g = new THREE.Group();
+  const marco = new THREE.ExtrudeGeometry(formaTrebol(escala), {
+    depth: 0.05 * escala, bevelEnabled: true, bevelThickness: 0.035 * escala, bevelSize: 0.03 * escala,
+    bevelSegments: 4, curveSegments: 18,
+  });
+  marco.center();
+  g.add(new THREE.Mesh(marco, oro));
+  const cara = new THREE.ExtrudeGeometry(formaTrebol(escala * 0.8), {
+    depth: 0.02 * escala, bevelEnabled: true, bevelThickness: 0.04 * escala, bevelSize: 0.03 * escala,
+    bevelSegments: 6, curveSegments: 18,
+  });
+  cara.center();
+  const piedraM = new THREE.Mesh(cara, piedra);
+  piedraM.position.z = 0.045 * escala;
+  g.add(piedraM);
+  // borde de bolitas doradas
+  const puntos = formaTrebol(escala * 0.905).getSpacedPoints(76);
+  const bolitas = new THREE.InstancedMesh(new THREE.SphereGeometry(0.024 * escala, 10, 8), oro, puntos.length);
+  const m = new THREE.Matrix4();
+  puntos.forEach((p, i) => {
+    m.makeTranslation(p.x, p.y, 0.068 * escala);
+    bolitas.setMatrixAt(i, m);
+  });
+  bolitas.computeBoundingSphere();
+  bolitas.computeBoundingBox();
+  g.add(bolitas);
+  return g;
+}
+
+// Cadena fina: eslabones ovalados que se alternan a 90°
+function cadena(curva, oro, paso = 0.055) {
+  const n = Math.floor(curva.getLength() / paso);
+  const eslabones = new THREE.InstancedMesh(new THREE.TorusGeometry(0.03, 0.008, 6, 14), oro, n);
+  const m = new THREE.Matrix4();
+  const base = new THREE.Matrix4();
+  const q = new THREE.Quaternion();
+  const escala = new V3(1.5, 1, 1);
+  const T = new V3();
+  const N = new V3();
+  const B = new V3();
+  const Z = new V3(0, 0, 1);
+  for (let i = 0; i < n; i++) {
+    const u = (i + 0.5) / n;
+    const p = curva.getPointAt(u);
+    curva.getTangentAt(u, T);
+    N.crossVectors(T, Z);
+    if (N.lengthSq() < 1e-6) N.set(1, 0, 0);
+    N.normalize();
+    B.crossVectors(T, N).normalize();
+    if (i % 2) base.makeBasis(T, B, N.clone().negate());
+    else base.makeBasis(T, N, B);
+    q.setFromRotationMatrix(base);
+    m.compose(p, q, escala);
+    eslabones.setMatrixAt(i, m);
+  }
+  eslabones.computeBoundingSphere();
+  eslabones.computeBoundingBox();
+  return eslabones;
+}
+
+// Set collar y topos de trébol (piedra negra con borde dorado)
+function crearTrebol() {
+  const g = new THREE.Group();
+  const oro = matOro();
+  const piedra = new THREE.MeshPhysicalMaterial({
+    color: 0x0b0b0d, roughness: 0.06, clearcoat: 1, clearcoatRoughness: 0.03, metalness: 0.1,
+  });
+  g.add(dijeTrebol(piedra, oro, 0.45));
+  const argolla = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.014, 10, 24), oro);
+  argolla.position.y = 0.53;
+  argolla.rotation.y = Math.PI / 2;
+  g.add(argolla);
+  g.add(cadena(new THREE.CatmullRomCurve3([
+    new V3(-0.85, 1.4, -0.25), new V3(-0.55, 1.02, -0.08), new V3(-0.22, 0.68, 0), new V3(0, 0.575, 0),
+    new V3(0.22, 0.68, 0), new V3(0.55, 1.02, -0.08), new V3(0.85, 1.4, -0.25),
+  ]), oro));
+  for (const lado of [-1, 1]) {
+    const topo = dijeTrebol(piedra, oro, 0.2);
+    topo.position.set(lado * 0.72, -0.62, 0.12);
+    topo.rotation.y = -lado * 0.35;
+    const poste = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.22, 8), oro);
+    poste.rotation.x = Math.PI / 2;
+    poste.position.z = -0.12;
+    const tope = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 10), oro);
+    tope.scale.set(1.3, 0.8, 0.35);
+    tope.position.z = -0.2;
+    topo.add(poste, tope);
+    g.add(topo);
+  }
+  return g;
+}
+
+const CUENTAS = {
+  vino: { color: 0x6b0e1e, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.05 },
+  ambar: {
+    color: 0xd07a1a, roughness: 0.06, transmission: 0.55, thickness: 0.35, ior: 1.5,
+    attenuationColor: new THREE.Color(0x7a3306), attenuationDistance: 0.35, clearcoat: 1,
+  },
+  marron: { color: 0x4b2716, roughness: 0.14, clearcoat: 1, clearcoatRoughness: 0.08 },
+};
+
+// Dije de caracol: espiral que crece, con estrías
+function dijeCaracol() {
+  const oro = matOro();
+  oro.side = THREE.DoubleSide;
+  const geo = new ParametricGeometry((u, v, destino) => {
+    const th = u * 3.6 * Math.PI;
+    const r = 0.03 * Math.exp(0.2 * th);
+    const estria = 1 + 0.13 * Math.pow(Math.abs(Math.sin(th * 6)), 0.6);
+    const boca = 1 + 0.35 * Math.pow(Math.max(0, u - 0.88) / 0.12, 2);
+    const rho = r * 0.58 * estria * boca;
+    const ang = v * Math.PI * 2;
+    const radio = r + rho * Math.cos(ang);
+    destino.set(radio * Math.cos(th), radio * Math.sin(th), rho * Math.sin(ang) * 0.8);
+  }, 260, 28);
+  const m = new THREE.Mesh(geo, oro);
+  m.rotation.z = Math.PI * 0.85;
+  m.scale.setScalar(1.15);
+  return m;
+}
+
+function dijeCorazon(oro) {
+  const f = new THREE.Shape();
+  f.moveTo(0, -0.3);
+  f.bezierCurveTo(-0.06, -0.21, -0.32, -0.08, -0.32, 0.1);
+  f.bezierCurveTo(-0.32, 0.28, -0.12, 0.34, 0, 0.2);
+  f.bezierCurveTo(0.12, 0.34, 0.32, 0.28, 0.32, 0.1);
+  f.bezierCurveTo(0.32, -0.08, 0.06, -0.21, 0, -0.3);
+  const geo = new THREE.ExtrudeGeometry(f, {
+    depth: 0.05, bevelEnabled: true, bevelThickness: 0.07, bevelSize: 0.05, bevelSegments: 10, curveSegments: 32,
+  });
+  geo.center();
+  return new THREE.Mesh(geo, oro);
+}
+
+function dijeEstrella(oro) {
+  const pts = [];
+  for (let i = 0; i < 200; i++) {
+    const a = (i / 200) * Math.PI * 2;
+    const k = Math.pow(0.5 + 0.5 * Math.cos(5 * (a - Math.PI / 2)), 1.4);
+    const rr = 0.11 + 0.21 * k;
+    pts.push(new V2(Math.cos(a) * rr, Math.sin(a) * rr));
+  }
+  const geo = new THREE.ExtrudeGeometry(new THREE.Shape(pts), {
+    depth: 0.04, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.035, bevelSegments: 8,
+  });
+  geo.center();
+  const g = new THREE.Group();
+  g.add(new THREE.Mesh(geo, oro));
+  const bolita = new THREE.SphereGeometry(0.018, 8, 6);
+  for (let b = 0; b < 5; b++) {
+    const a = Math.PI / 2 + (b * 2 * Math.PI) / 5;
+    for (const d of [0.07, 0.14, 0.21]) {
+      const m = new THREE.Mesh(bolita, oro);
+      m.position.set(Math.cos(a) * d, Math.sin(a) * d, 0.07);
+      g.add(m);
+    }
+  }
+  return g;
+}
+
+// Collar chicle: cuentas grandes brillantes, separadores dorados y dije colgando
+function crearChicle(op = {}) {
+  const g = new THREE.Group();
+  const oro = matOro();
+  const cuenta = new THREE.MeshPhysicalMaterial(CUENTAS[op.color] || CUENTAS.vino);
+  const puntos = [];
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2;
+    const c = Math.cos(a);
+    puntos.push(new V3(Math.sin(a) * 1.05, c < 0 ? c * 1.2 : c * 0.8, c > 0 ? -c * 0.45 : 0));
+  }
+  const curva = new THREE.CatmullRomCurve3(puntos, true, "centripetal");
+  const radio = 0.13;
+  const total = Math.floor(curva.getLength() / (radio * 2 + 0.05));
+  const esfera = new THREE.SphereGeometry(radio, 40, 28);
+  const separador = new THREE.TorusGeometry(0.045, 0.02, 10, 20);
+  const T = new V3();
+  const Z = new V3(0, 0, 1);
+  for (let i = 1; i < total; i++) {
+    const b = new THREE.Mesh(esfera, cuenta);
+    b.position.copy(curva.getPointAt(i / total));
+    g.add(b);
+    if (i < total - 1) {
+      const us = (i + 0.5) / total;
+      const sp = new THREE.Mesh(separador, oro);
+      sp.position.copy(curva.getPointAt(us));
+      curva.getTangentAt(us, T);
+      sp.quaternion.setFromUnitVectors(Z, T);
+      g.add(sp);
+    }
+  }
+  const broche = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.16, 16), oro);
+  broche.position.copy(curva.getPointAt(0));
+  broche.rotation.z = Math.PI / 2;
+  g.add(broche);
+
+  const abajo = curva.getPointAt(0.5);
+  const argolla = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.018, 10, 24), oro);
+  argolla.position.set(abajo.x, abajo.y - radio - 0.04, abajo.z + 0.02);
+  g.add(argolla);
+  const dije = op.dije === "corazon" ? dijeCorazon(oro) : op.dije === "estrella" ? dijeEstrella(oro) : dijeCaracol();
+  const colgante = new THREE.Group();
+  colgante.add(dije);
+  const caja = new THREE.Box3().setFromObject(colgante);
+  dije.position.y -= caja.max.y;
+  dije.position.x -= (caja.max.x + caja.min.x) / 2;
+  colgante.position.set(abajo.x, argolla.position.y - 0.05, abajo.z + 0.04);
+  g.add(colgante);
   return g;
 }
 
 /* ---------------- Catálogo del showroom ---------------- */
 
 const PRODUCTOS = [
+  {
+    id: "greca", real: true, nombre: "Greca de 3 tazas", categoria: "Cocina y hogar", color: "#F2A6C6",
+    precio: "RD$760", unidad: "cada una", pose: [0, 0.6, 0],
+    desc: "Con detalles plateados y asa con apariencia de madera. Elige el color y gírala.",
+    variantes: [{ clave: "color", nombre: "Color", opciones: [
+      ["rosado", "Rosado", "#F2A6C6"], ["rojo", "Rojo", "#D32128"], ["verde", "Verde", "#5DBB2B"],
+      ["blanco", "Blanco", "#F3F3F1"], ["negro", "Negro", "#1C1C20"], ["turquesa", "Turquesa", "#1FA2A0"],
+    ] }],
+    crear: crearGrecaReal, modelo: null,
+  },
+  {
+    id: "trebol", real: true, nombre: "Set collar y topos de trébol", categoria: "Bisutería", color: "#18181B",
+    precio: "RD$250", unidad: "el set en acero inoxidable · RD$300 en rodio 18K",
+    desc: "Dije de trébol negro con borde dorado de bolitas, en cadena fina, y topos a juego.",
+    crear: crearTrebol, modelo: null,
+  },
+  {
+    id: "chicle", real: true, nombre: "Collar chicle con dije", categoria: "Bisutería", color: "#6B0E1E",
+    precio: "RD$495", unidad: "la unidad",
+    desc: "Cuentas grandes y brillantes con dije dorado de acero inoxidable. Elige el color y el dije.",
+    variantes: [
+      { clave: "color", nombre: "Color", opciones: [["vino", "Rojo vino", "#6B0E1E"], ["ambar", "Ámbar", "#D07A1A"], ["marron", "Marrón", "#4B2716"]] },
+      { clave: "dije", nombre: "Dije", opciones: [["caracol", "Caracol"], ["corazon", "Corazón"], ["estrella", "Estrella de mar"]] },
+    ],
+    crear: crearChicle, modelo: null,
+  },
   {
     id: "flor", nombre: "Flor dorada", categoria: "Bisutería", color: "#E9B64A",
     desc: "Pieza dorada de cinco pétalos con perla al centro, para aretes, collares y prendedores.",
@@ -431,11 +722,6 @@ const PRODUCTOS = [
     id: "jabon", nombre: "Jabón artesanal", categoria: "Jabonería", color: "#A98BDB", pose: [0, -0.35, 0],
     desc: "Jabón de glicerina con relieve masajeador, hecho con base para jabón y moldes de silicona.",
     crear: crearJabon, modelo: null,
-  },
-  {
-    id: "greca", nombre: "Greca de acero", categoria: "Hogar y cocina", color: "#B8BCC4", pose: [0, 0.35, 0],
-    desc: "Greca de acero inoxidable para 3 tazas, para el cafecito de todos los días.",
-    crear: crearGreca, modelo: null,
   },
 ];
 
@@ -506,7 +792,7 @@ function liberar(objeto) {
   });
 }
 
-async function construir(p) {
+async function construir(p, opciones = {}) {
   let obj = null;
   if (p.modelo) {
     try {
@@ -516,7 +802,7 @@ async function construir(p) {
       console.warn("No se pudo cargar el modelo 3D de", p.nombre, e);
     }
   }
-  if (!obj) obj = p.crear();
+  if (!obj) obj = p.crear(opciones);
   if (p.pose) obj.rotation.set(...p.pose);
   return obj;
 }
@@ -535,13 +821,13 @@ const DISPOSICION = [
   { id: "vela", pos: [0.2, -0.05, 0.6], tam: 1.45, rot: [0.12, 0, 0] },
   { id: "jabon", pos: [1.55, -1.1, 0], tam: 1.35, rot: [0.2, -0.4, 0.1] },
   { id: "boton", pos: [-1.45, -0.95, 0.35], tam: 1.25, rot: [0.1, 0.35, 0] },
-  { id: "perlas", pos: [-0.1, -1.7, -0.4], tam: 1.5, rot: [-0.7, 0, 0.12] },
+  { id: "chicle", pos: [-0.1, -1.65, -0.4], tam: 1.55, rot: [-0.35, 0, 0.08] },
   { id: "greca", pos: [0.1, 1.55, -1.3], tam: 1.2, rot: [0.1, 0.5, 0] },
 ];
 
 function iniciarPortada(host, alElegir) {
   const renderer = crearRenderer(host,
-    "Productos de La Reina Mercería en 3D: hilo, botones, vela, jabón, perlas, flor dorada y greca. Toca uno para verlo de cerca.");
+    "Productos de La Reina Mercería en 3D: hilo, botones, vela, jabón, collar chicle, flor dorada y greca. Toca uno para verlo de cerca.");
   const escena = new THREE.Scene();
   escena.environment = entorno(renderer);
   const camara = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
@@ -695,38 +981,105 @@ function iniciarVisor(ui) {
   let peticion = 0;
   let entrada = 1;
 
-  // Botones para elegir producto
-  PRODUCTOS.forEach((p) => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "chip";
-    b.dataset.id = p.id;
-    b.setAttribute("aria-pressed", "false");
-    const punto = document.createElement("span");
-    punto.className = "chip__punto";
-    punto.style.setProperty("--c", p.color);
-    b.append(punto, document.createTextNode(p.nombre));
-    b.addEventListener("click", () => seleccionar(p.id));
-    ui.chips.appendChild(b);
+  // Botones para elegir producto: primero los de la tienda
+  [["De la tienda", (p) => p.real], ["Modelos ilustrativos", (p) => !p.real]].forEach(([titulo, filtro]) => {
+    const grupo = document.createElement("div");
+    grupo.className = "chips__grupo";
+    const nombreGrupo = document.createElement("p");
+    nombreGrupo.className = "chips__titulo";
+    nombreGrupo.textContent = titulo;
+    const fila = document.createElement("div");
+    fila.className = "chips__fila";
+    PRODUCTOS.filter(filtro).forEach((p) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      b.dataset.id = p.id;
+      b.setAttribute("aria-pressed", "false");
+      const punto = document.createElement("span");
+      punto.className = "chip__punto";
+      punto.style.setProperty("--c", p.color);
+      b.append(punto, document.createTextNode(p.nombre));
+      b.addEventListener("click", () => seleccionar(p.id));
+      fila.appendChild(b);
+    });
+    grupo.append(nombreGrupo, fila);
+    ui.chips.appendChild(grupo);
   });
 
-  function mostrarDatos(p) {
+  const elegidas = {};
+  const opcionesDe = (p) => {
+    const base = {};
+    (p.variantes || []).forEach((v) => { base[v.clave] = v.opciones[0][0]; });
+    return Object.assign(base, elegidas[p.id] || {});
+  };
+  const textoOpciones = (p, op) => (p.variantes || [])
+    .map((v) => (v.opciones.find((o) => o[0] === op[v.clave]) || [])[1])
+    .filter(Boolean).join(", ");
+
+  function mostrarDatos(p, op) {
+    const extra = textoOpciones(p, op);
     ui.categoria.textContent = p.categoria;
     ui.nombre.textContent = p.nombre;
     ui.desc.textContent = p.desc;
-    ui.whatsapp.href = "https://wa.me/" + WHATSAPP + "?text=" +
-      encodeURIComponent("Hola, La Reina Mercería. Me interesa: " + p.nombre + ". ¿Lo tienen disponible?");
+    ui.precio.hidden = !p.precio;
+    ui.precio.textContent = p.precio ? p.precio + (p.unidad ? " " + p.unidad : "") : "";
+    ui.whatsapp.href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(
+      "Hola, La Reina Mercería. Me interesa: " + p.nombre + (extra ? " (" + extra + ")" : "") + ". ¿Lo tienen disponible?");
+    if (ui.nota) {
+      ui.nota.textContent = p.real
+        ? "Modelo 3D hecho a partir de las fotos de la tienda. Pregunta por existencia y colores."
+        : "Modelo ilustrativo. Pregunta por colores, tamaños y disponibilidad.";
+    }
+    ui.variantes.replaceChildren();
+    (p.variantes || []).forEach((v) => {
+      const caja = document.createElement("div");
+      caja.className = "variante";
+      caja.setAttribute("role", "group");
+      caja.setAttribute("aria-label", v.nombre);
+      const titulo = document.createElement("p");
+      titulo.className = "variante__nombre";
+      const elegido = document.createElement("strong");
+      elegido.textContent = (v.opciones.find((o) => o[0] === op[v.clave]) || [])[1] || "";
+      titulo.append(document.createTextNode(v.nombre + ": "), elegido);
+      const fila = document.createElement("div");
+      fila.className = "variante__opciones";
+      v.opciones.forEach(([idOpcion, nombreOpcion, muestra]) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = muestra ? "muestra" : "opcion";
+        b.setAttribute("aria-pressed", String(op[v.clave] === idOpcion));
+        b.title = nombreOpcion;
+        if (muestra) {
+          b.style.setProperty("--c", muestra);
+          b.setAttribute("aria-label", nombreOpcion);
+        } else {
+          b.textContent = nombreOpcion;
+        }
+        b.addEventListener("click", () => seleccionar(p.id, { [v.clave]: idOpcion }));
+        fila.appendChild(b);
+      });
+      caja.append(titulo, fila);
+      ui.variantes.appendChild(caja);
+    });
     ui.chips.querySelectorAll(".chip").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.id === p.id)));
-    ui.anuncio.textContent = p.nombre + ", en 3D.";
+    ui.anuncio.textContent = p.nombre + (extra ? ", " + extra : "") + ", en 3D.";
   }
 
-  async function seleccionar(id) {
+  let claveActual = "";
+  async function seleccionar(id, opciones) {
     const p = PRODUCTOS.find((x) => x.id === id);
-    if (!p || id === idActual) return;
+    if (!p) return;
+    if (opciones) elegidas[id] = Object.assign({}, elegidas[id], opciones);
+    const op = opcionesDe(p);
+    const clave = id + JSON.stringify(op);
+    if (clave === claveActual) return;
+    const otroProducto = id !== idActual;
+    claveActual = clave;
     idActual = id;
     const mia = ++peticion;
-    mostrarDatos(p);
-    const obj = await construir(p);
+    mostrarDatos(p, op);
+    const obj = await construir(p, op);
     if (mia !== peticion) {
       liberar(obj);
       return;
@@ -737,7 +1090,7 @@ function iniciarVisor(ui) {
     }
     actual = encuadrar(obj, 2.15);
     soporte.add(actual);
-    entrada = MOV_REDUCIDO ? 1 : 0;
+    entrada = MOV_REDUCIDO || !otroProducto ? 1 : 0;
   }
 
   // Controles
@@ -816,14 +1169,15 @@ async function iniciar() {
     nombre: $("visor-nombre"), desc: $("visor-desc"), whatsapp: $("visor-whatsapp"),
     girar: $("visor-girar"), reiniciar: $("visor-reiniciar"), acercar: $("visor-acercar"),
     alejar: $("visor-alejar"), pista: $("visor-pista"), anuncio: $("visor-anuncio"),
+    precio: $("visor-precio"), variantes: $("visor-variantes"), nota: document.querySelector(".visor__nota"),
   };
 
   // Que la etiqueta de la vela salga con las letras de la marca
   await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]);
 
   const visor = ui.escena ? iniciarVisor(ui) : null;
-  const ver = (id) => {
-    if (visor) visor.seleccionar(id);
+  const ver = (id, opciones) => {
+    if (visor) visor.seleccionar(id, opciones);
     const destino = document.getElementById("showroom");
     if (destino) destino.scrollIntoView({ behavior: MOV_REDUCIDO ? "auto" : "smooth" });
   };
@@ -831,8 +1185,9 @@ async function iniciar() {
   const portada = document.querySelector(".portada__3d");
   if (portada) iniciarPortada(portada, ver);
 
-  window.laReina3D = { seleccionar: (id) => visor && visor.seleccionar(id) };
-  if (visor) await visor.seleccionar(window.__ver3dPendiente || PRODUCTOS[0].id);
+  window.laReina3D = { seleccionar: (id, opciones) => visor && visor.seleccionar(id, opciones), ver };
+  const pendiente = window.__ver3dPendiente;
+  if (visor) await visor.seleccionar(pendiente ? pendiente.id || pendiente : PRODUCTOS[0].id, pendiente && pendiente.opciones);
   document.documentElement.classList.remove("sin-3d");
   document.documentElement.classList.add("tres-listo");
 }
