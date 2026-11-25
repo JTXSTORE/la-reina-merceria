@@ -15,7 +15,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,600;1,700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
   <script>document.documentElement.classList.add("js");</script>
 
@@ -71,9 +71,17 @@
   <symbol id="i-grupo" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
   <symbol id="i-estrella" viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></symbol>
   <symbol id="i-tienda" viewBox="0 0 24 24"><path d="M3 9 4.5 4h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13.5V21h14v-7.5"/><path d="M10 21v-5h4v5"/></symbol>
+  <symbol id="i-bolsa" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+  <symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-menos" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-basura" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-pausa" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="m7 4 13 8-13 8V4z"/></symbol>
+  <symbol id="i-chispa" viewBox="0 0 24 24"><path d="M12 2c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z"/></symbol>
   <symbol id="i-corona" viewBox="0 0 24 24"><path d="M3 18 2 7l5.5 4L12 4l4.5 7L22 7l-1 11z"/><path d="M4 21h16"/></symbol>
 </svg>
 
+<div class="progreso" aria-hidden="true"></div>
 <a class="saltar" href="#contenido">Saltar al contenido</a>
 
 <!-- Aviso de temporada: se oculta solo después de la fecha de data-hasta (AAAA-MM-DD). -->
@@ -109,10 +117,11 @@
 
   <!-- ============ INICIO ============ -->
   <section id="inicio" class="portada">
+    <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
     <div class="contenedor portada__rejilla">
       <div class="portada__texto">
         <p class="etiqueta">Suministros &amp; Manualidades · Santiago, RD</p>
-        <h1>Todo lo que necesitas para crear, en un solo lugar</h1>
+        <h1 class="titulo-animado">Todo lo que necesitas para crear, <em class="acento">en un solo lugar</em></h1>
         <p class="portada__bajada">Bisutería, jabonería, velas de cera de soya, mercería y artículos para el hogar. Materiales para tus manualidades y para hacer crecer tu emprendimiento.</p>
         <div class="acciones">
           <a class="boton boton--verde" href="https://wa.me/18092415077" data-wa="Hola, La Reina Mercería. Quiero información de sus productos.">
@@ -199,6 +208,10 @@
     </div>
   </section>
 
+  <div class="cinta" aria-hidden="true">
+    <div class="cinta__pista"><span>Bisutería</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Resina y manualidades</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Mercería y costura</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Para emprender</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Cocina y hogar</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Regalos y Navidad</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Velas y jabones</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Accesorios</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Bisutería</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Resina y manualidades</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Mercería y costura</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Para emprender</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Cocina y hogar</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Regalos y Navidad</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Velas y jabones</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg><span>Accesorios</span><svg class="icono" aria-hidden="true"><use href="#i-chispa"/></svg></div>
+  </div>
+
   <!-- ============ VITRINA (fotos reales de Instagram; datos en js/productos.js) ============ -->
   <section id="productos" class="vitrina" aria-labelledby="vitrina-titulo">
     <div class="contenedor">
@@ -231,18 +244,24 @@
           <p class="carrusel__precio"><span id="carrusel-precio"></span> <span class="carrusel__precio2" id="carrusel-precio2"></span></p>
         </div>
         <div class="carrusel__acciones">
+          <button type="button" class="boton boton--magenta" id="carrusel-agregar">
+            <svg class="icono" aria-hidden="true"><use href="#i-bolsa"/></svg><span>Agregar al pedido</span>
+          </button>
           <a class="boton boton--verde" id="carrusel-wa" href="https://wa.me/18092415077" target="_blank" rel="noopener">
             <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Lo quiero
           </a>
           <button type="button" class="boton boton--borde" id="carrusel-lupa">
             <svg class="icono" aria-hidden="true"><use href="#i-mano"/></svg>Ver de cerca
           </button>
-          <button type="button" class="boton boton--magenta" id="carrusel-3d" hidden>
+          <button type="button" class="boton boton--tinta" id="carrusel-3d" hidden>
             <svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D
           </button>
         </div>
       </div>
       <div class="carrusel__pie">
+        <button type="button" class="carrusel__pausa" id="carrusel-pausa" aria-pressed="false" aria-label="Pausar el carrusel" title="Pausar">
+          <svg class="icono" aria-hidden="true"><use href="#i-pausa"/></svg>
+        </button>
         <p class="carrusel__contador" id="carrusel-contador" aria-live="polite"></p>
         <div class="carrusel__minis" id="carrusel-mini" role="group" aria-label="Todos los productos"></div>
       </div>
@@ -298,6 +317,9 @@
           <a class="boton boton--verde" id="visor-whatsapp" href="https://wa.me/18092415077" target="_blank" rel="noopener">
             <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Lo quiero: preguntar por WhatsApp
           </a>
+          <button type="button" class="boton boton--borde-claro" id="visor-agregar">
+            <svg class="icono" aria-hidden="true"><use href="#i-bolsa"/></svg><span>Agregar al pedido</span>
+          </button>
           <p class="visor__nota">Modelos 3D de referencia. Pregunta por colores, tamaños y disponibilidad.</p>
         </div>
       </div>
@@ -417,6 +439,43 @@
   <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>
 </a>
 
+<button type="button" class="pedido-boton" id="pedido-abrir" hidden>
+  <svg class="icono" aria-hidden="true"><use href="#i-bolsa"/></svg><span class="pedido-boton__texto">Mi pedido</span>
+  <span class="pedido-boton__n" id="pedido-n">0</span>
+</button>
+
+<dialog class="pedido" id="pedido" aria-labelledby="pedido-titulo">
+  <div class="pedido__cabeza">
+    <h2 id="pedido-titulo"><svg class="icono" aria-hidden="true"><use href="#i-bolsa"/></svg>Mi pedido</h2>
+    <button type="button" class="pedido__cerrar" id="pedido-cerrar" aria-label="Cerrar">
+      <svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg>
+    </button>
+  </div>
+  <ul class="pedido__lista" id="pedido-lista"></ul>
+  <p class="pedido__vacio" id="pedido-vacio">Todavía no has agregado productos. Toca «Agregar al pedido» en la vitrina o en el showroom.</p>
+  <div class="pedido__pie" id="pedido-pie">
+    <p class="pedido__total">Total estimado <strong id="pedido-total">RD$0</strong></p>
+    <p class="pedido__nota" id="pedido-nota"></p>
+    <label class="campo">Retirar en
+      <select id="pedido-sucursal">
+        <option value="">La sucursal que me quede mejor</option>
+        <option>Sucursal Rafael Vidal (Rafael Vidal esq. Calle 7)</option>
+        <option>Sucursal Beller (Calle Beller #110)</option>
+        <option>Sucursal Restauración (Calle Restauración #39)</option>
+      </select>
+    </label>
+    <label class="campo">Tu nombre (opcional)
+      <input id="pedido-nombre" type="text" autocomplete="given-name" maxlength="60">
+    </label>
+    <a class="boton boton--verde pedido__enviar" id="pedido-enviar" href="https://wa.me/18092415077" target="_blank" rel="noopener">
+      <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Enviar pedido por WhatsApp
+    </a>
+    <button type="button" class="pedido__vaciar" id="pedido-vaciar">Vaciar pedido</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <dialog class="lupa" id="lupa" aria-labelledby="lupa-nombre">
   <div class="lupa__cuerpo">
     <div class="lupa__escena">
@@ -433,13 +492,16 @@
       <p class="lupa__precio2" id="lupa-precio2"></p>
       <p class="lupa__detalle" id="lupa-detalle"></p>
       <div class="lupa__acciones">
+        <button type="button" class="boton boton--magenta" id="lupa-agregar">
+          <svg class="icono" aria-hidden="true"><use href="#i-bolsa"/></svg><span>Agregar al pedido</span>
+        </button>
         <a class="boton boton--verde" id="lupa-wa" href="https://wa.me/18092415077" target="_blank" rel="noopener">
           <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Lo quiero
         </a>
         <a class="boton boton--borde" id="lupa-ig" href="https://www.instagram.com/mercerialareina2/" target="_blank" rel="noopener">
           <svg class="icono" aria-hidden="true"><use href="#i-instagram"/></svg>Ver en Instagram
         </a>
-        <button type="button" class="boton boton--magenta" id="lupa-3d" hidden>
+        <button type="button" class="boton boton--blanco" id="lupa-3d" hidden>
           <svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D
         </button>
       </div>
@@ -461,6 +523,7 @@
 </dialog>
 
 <script src="js/productos.js" defer></script>
+<script src="js/pedido.js" defer></script>
 <script src="js/vitrina.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>

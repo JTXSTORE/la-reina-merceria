@@ -37,6 +37,20 @@ En el showroom «Tómalo en tus manos» hay tres productos de la tienda modelado
 (rojo vino, ámbar o marrón, con dije de caracol, corazón o estrella de mar). En `js/productos.js`, el campo
 `tres: { id, opciones }` pone el botón «Ver en 3D» en la vitrina.
 
+## Mi pedido (por WhatsApp)
+
+`js/pedido.js`. En la vitrina, en la vista de cerca y en el showroom 3D hay «Agregar al pedido». La bolsita
+flotante abre un panel con los productos, cantidades, total estimado (con los precios publicados), sucursal para
+retirar y nombre opcional; «Enviar pedido por WhatsApp» manda todo en un solo mensaje. El pedido se guarda en el
+navegador de la persona (localStorage), no en ningún servidor.
+
+## Animaciones
+
+Portada con aurora animada y título que aparece palabra por palabra, cinta de categorías, barra de progreso,
+cabecera que se compacta al bajar, botones «magnéticos», transición de la foto a la vista de cerca y bloques que
+entran suaves al bajar. Si la persona tiene activado «reducir movimiento» en su equipo, todo eso se apaga y el
+carrusel no avanza solo (tiene botón de pausa).
+
 ## Cambios frecuentes
 
 | Qué cambiar | Dónde |

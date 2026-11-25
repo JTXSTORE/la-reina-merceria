@@ -140,6 +140,7 @@
     $("carrusel-precio2").textContent = p.precio2 ? "· " + p.precio2 : "";
     $("carrusel-wa").href = enlaceWhatsApp(p);
     $("carrusel-3d").hidden = !p.tres;
+    etiquetaAgregar($("carrusel-agregar"), p);
     $("carrusel-contador").textContent = (activo + 1) + " de " + lista.length;
     $("carrusel-ant").disabled = activo === 0;
     $("carrusel-sig").disabled = activo === lista.length - 1;
@@ -168,6 +169,22 @@
     if (pos === activo) abrir(lista[activo], c);
     else ir(pos);
   }
+
+  /* ---------- Pedido ---------- */
+  function agregarAlPedido(p) {
+    if (!window.LaReinaPedido) return;
+    window.LaReinaPedido.agregar({ nombre: p.nombre, precio: p.precio, unidad: p.unidad, foto: fotoChica(p) });
+  }
+  function etiquetaAgregar(boton, p) {
+    if (!boton || !p) return;
+    var n = window.LaReinaPedido ? window.LaReinaPedido.cantidadDe(p.nombre) : 0;
+    boton.lastElementChild.textContent = n ? "Agregar otro (" + n + ")" : "Agregar al pedido";
+    boton.classList.toggle("en-pedido", n > 0);
+  }
+  document.addEventListener("pedido:cambio", function () {
+    etiquetaAgregar($("carrusel-agregar"), PRODUCTOS[lista[activo]]);
+    if (lupa && lupa.open) etiquetaAgregar($("lupa-agregar"), PRODUCTOS[indice]);
+  });
 
   /* ---------- Filtros ---------- */
   var categorias = [];
@@ -259,30 +276,49 @@
     if (e.key === "ArrowRight") { parar(); ir(activo + 1); e.preventDefault(); }
   });
   $("carrusel-lupa").addEventListener("click", function () { parar(); abrir(lista[activo], $("carrusel-lupa")); });
+  $("carrusel-agregar").addEventListener("click", function () { parar(); agregarAlPedido(PRODUCTOS[lista[activo]]); });
   $("carrusel-3d").addEventListener("click", function () { parar(); ver3d(PRODUCTOS[lista[activo]].tres); });
   window.addEventListener("resize", function () { pintar(false); });
 
-  /* ---------- Avance automático (se detiene al tocar) ---------- */
+  /* ---------- Avance automático: se detiene al tocar y tiene botón de pausa ---------- */
   var auto = null;
-  var tocado = false;
+  var tocado = sinMovimiento;
+  var enPantalla = false;
+  var botonPausa = $("carrusel-pausa");
+  function pintarPausa() {
+    var pausado = tocado;
+    botonPausa.setAttribute("aria-pressed", String(pausado));
+    botonPausa.setAttribute("aria-label", pausado ? "Reanudar el carrusel" : "Pausar el carrusel");
+    botonPausa.title = pausado ? "Reanudar" : "Pausar";
+    botonPausa.firstElementChild.firstElementChild.setAttribute("href", pausado ? "#i-play" : "#i-pausa");
+  }
+  function arrancarAuto() {
+    if (auto || tocado || !enPantalla) return;
+    auto = setInterval(function () {
+      if (document.hidden || (lupa && lupa.open)) return;
+      ir(activo + 1 >= lista.length ? 0 : activo + 1);
+    }, 3800);
+  }
   function parar() {
     tocado = true;
     if (auto) { clearInterval(auto); auto = null; }
+    pintarPausa();
   }
-  if (!sinMovimiento && "IntersectionObserver" in window) {
+  botonPausa.addEventListener("click", function () {
+    if (tocado) {
+      tocado = false;
+      arrancarAuto();
+      pintarPausa();
+    } else parar();
+  });
+  if ("IntersectionObserver" in window) {
     new IntersectionObserver(function (entradas) {
-      var visible = entradas[0].isIntersecting;
-      if (visible && !tocado && !auto) {
-        auto = setInterval(function () {
-          if (document.hidden || (lupa && lupa.open)) return;
-          ir(activo + 1 >= lista.length ? 0 : activo + 1);
-        }, 3800);
-      } else if (!visible && auto) {
-        clearInterval(auto);
-        auto = null;
-      }
+      enPantalla = entradas[0].isIntersecting;
+      if (enPantalla) arrancarAuto();
+      else if (auto) { clearInterval(auto); auto = null; }
     }, { threshold: 0.5 }).observe(escena);
   }
+  pintarPausa();
 
   filtrar("Todo");
 
@@ -309,6 +345,7 @@
     $("lupa-wa").href = enlaceWhatsApp(p);
     $("lupa-ig").href = p.instagram;
     $("lupa-3d").hidden = !p.tres;
+    etiquetaAgregar($("lupa-agregar"), p);
     $("lupa-fecha").textContent = p.fecha ? "Publicado en Instagram el " + fechaCorta(p.fecha) + ". Confirma precio y existencia por WhatsApp." : "";
     metaZoom = 1;
     if (!sinMovimiento) { ry = -35; vy = 0; }
@@ -318,8 +355,21 @@
     indice = i;
     disparador = desde || null;
     pintarLupa(PRODUCTOS[i]);
-    lupa.showModal();
-    document.documentElement.classList.add("lupa-abierta");
+    var foto = cartas[i] && cartas[i].firstChild;
+    var mostrar = function () {
+      if (foto) foto.style.viewTransitionName = "";
+      imgLupa.style.viewTransitionName = "foto-producto";
+      lupa.showModal();
+      document.documentElement.classList.add("lupa-abierta");
+    };
+    // La foto de la carta «vuela» hasta la vista de cerca (donde el navegador lo permite)
+    if (document.startViewTransition && !sinMovimiento && foto && cartas[i].classList.contains("activa")) {
+      foto.style.viewTransitionName = "foto-producto";
+      ry = 0;
+      vy = 0;
+      var vt = document.startViewTransition(mostrar);
+      vt.finished.finally(function () { imgLupa.style.viewTransitionName = ""; });
+    } else mostrar();
     arrancar();
   }
 
@@ -342,6 +392,7 @@
   $("lupa-cerrar").addEventListener("click", function () { lupa.close(); });
   $("lupa-ant").addEventListener("click", function () { mover(-1); });
   $("lupa-sig").addEventListener("click", function () { mover(1); });
+  $("lupa-agregar").addEventListener("click", function () { agregarAlPedido(PRODUCTOS[indice]); });
   $("lupa-3d").addEventListener("click", function () {
     var t = PRODUCTOS[indice].tres;
     lupa.close();

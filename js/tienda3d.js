@@ -669,7 +669,7 @@ function crearChicle(op = {}) {
 const PRODUCTOS = [
   {
     id: "greca", real: true, nombre: "Greca de 3 tazas", categoria: "Cocina y hogar", color: "#F2A6C6",
-    precio: "RD$760", unidad: "cada una", pose: [0, 0.6, 0],
+    precio: "RD$760", unidad: "cada una", pose: [0, 0.6, 0], foto: "img/productos/mini/De1jKxyltRx.webp",
     desc: "Con detalles plateados y asa con apariencia de madera. Elige el color y gírala.",
     variantes: [{ clave: "color", nombre: "Color", opciones: [
       ["rosado", "Rosado", "#F2A6C6"], ["rojo", "Rojo", "#D32128"], ["verde", "Verde", "#5DBB2B"],
@@ -679,13 +679,13 @@ const PRODUCTOS = [
   },
   {
     id: "trebol", real: true, nombre: "Set collar y topos de trébol", categoria: "Bisutería", color: "#18181B",
-    precio: "RD$250", unidad: "el set en acero inoxidable · RD$300 en rodio 18K",
+    precio: "RD$250", unidad: "el set en acero inoxidable · RD$300 en rodio 18K", foto: "img/productos/mini/DgLOYB2FhG0.webp",
     desc: "Dije de trébol negro con borde dorado de bolitas, en cadena fina, y topos a juego.",
     crear: crearTrebol, modelo: null,
   },
   {
     id: "chicle", real: true, nombre: "Collar chicle con dije", categoria: "Bisutería", color: "#6B0E1E",
-    precio: "RD$495", unidad: "la unidad",
+    precio: "RD$495", unidad: "la unidad", foto: "img/productos/mini/Dfr-Tztloup.webp",
     desc: "Cuentas grandes y brillantes con dije dorado de acero inoxidable. Elige el color y el dije.",
     variantes: [
       { clave: "color", nombre: "Color", opciones: [["vino", "Rojo vino", "#6B0E1E"], ["ambar", "Ámbar", "#D07A1A"], ["marron", "Marrón", "#4B2716"]] },
@@ -1063,7 +1063,34 @@ function iniciarVisor(ui) {
       ui.variantes.appendChild(caja);
     });
     ui.chips.querySelectorAll(".chip").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.id === p.id)));
+    enPanel = { p, extra };
+    if (ui.agregar) {
+      ui.agregar.hidden = !p.real;
+      etiquetaAgregar();
+    }
     ui.anuncio.textContent = p.nombre + (extra ? ", " + extra : "") + ", en 3D.";
+  }
+
+  let enPanel = null;
+  const fotoVariante = { ambar: "img/productos/mini/Dej7i8wkYqP.webp" };
+  function etiquetaAgregar() {
+    if (!ui.agregar || !enPanel) return;
+    const nombre = enPanel.p.nombre;
+    const pedido = window.LaReinaPedido;
+    const n = pedido ? pedido.cantidadDe(nombre + (enPanel.extra ? " · " + enPanel.extra : "")) : 0;
+    ui.agregar.lastElementChild.textContent = n ? "Agregar otro (" + n + ")" : "Agregar al pedido";
+  }
+  if (ui.agregar) {
+    ui.agregar.addEventListener("click", () => {
+      if (!enPanel || !window.LaReinaPedido) return;
+      const { p, extra } = enPanel;
+      const op = opcionesDe(p);
+      window.LaReinaPedido.agregar({
+        nombre: p.nombre, variante: extra, precio: p.precio, unidad: p.unidad,
+        foto: fotoVariante[op.color] || p.foto,
+      });
+    });
+    document.addEventListener("pedido:cambio", etiquetaAgregar);
   }
 
   let claveActual = "";
@@ -1170,6 +1197,7 @@ async function iniciar() {
     girar: $("visor-girar"), reiniciar: $("visor-reiniciar"), acercar: $("visor-acercar"),
     alejar: $("visor-alejar"), pista: $("visor-pista"), anuncio: $("visor-anuncio"),
     precio: $("visor-precio"), variantes: $("visor-variantes"), nota: document.querySelector(".visor__nota"),
+    agregar: $("visor-agregar"),
   };
 
   // Que la etiqueta de la vela salga con las letras de la marca

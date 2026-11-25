@@ -42,6 +42,70 @@
     });
   }
 
+  var movimientoReducido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var punteroFino = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  // Título de la portada: aparece palabra por palabra
+  var titulo = document.querySelector(".titulo-animado");
+  if (titulo && !movimientoReducido) {
+    var n = 0;
+    var partir = function (nodo) {
+      Array.prototype.slice.call(nodo.childNodes).forEach(function (hijo) {
+        if (hijo.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          hijo.textContent.split(/(\s+)/).forEach(function (trozo) {
+            if (!trozo) return;
+            if (/^\s+$/.test(trozo)) { frag.appendChild(document.createTextNode(trozo)); return; }
+            var s = document.createElement("span");
+            s.className = "palabra";
+            s.style.setProperty("--i", String(n++));
+            s.textContent = trozo;
+            frag.appendChild(s);
+          });
+          nodo.replaceChild(frag, hijo);
+        } else if (hijo.nodeType === 1) partir(hijo);
+      });
+    };
+    partir(titulo);
+    titulo.classList.add("partido");
+  }
+
+  // Barra de progreso y cabecera compacta al bajar
+  var progreso = document.querySelector(".progreso");
+  var cabecera = document.querySelector(".cabecera");
+  var pendiente = false;
+  var alBajar = function () {
+    pendiente = false;
+    var alto = document.documentElement.scrollHeight - window.innerHeight;
+    if (progreso) progreso.style.transform = "scaleX(" + (alto > 0 ? window.scrollY / alto : 0).toFixed(4) + ")";
+    if (cabecera) cabecera.classList.toggle("compacta", window.scrollY > 40);
+  };
+  window.addEventListener("scroll", function () {
+    if (!pendiente) { pendiente = true; requestAnimationFrame(alBajar); }
+  }, { passive: true });
+  alBajar();
+
+  // Botones «magnéticos»: se acercan un poco al cursor
+  if (punteroFino && !movimientoReducido) {
+    document.querySelectorAll(".boton, .pedido-boton, .whatsapp-flotante").forEach(function (b) {
+      b.addEventListener("pointermove", function (e) {
+        var r = b.getBoundingClientRect();
+        var x = (e.clientX - r.left - r.width / 2) * 0.18;
+        var y = (e.clientY - r.top - r.height / 2) * 0.28;
+        b.style.setProperty("--mx", x.toFixed(1) + "px");
+        b.style.setProperty("--my", y.toFixed(1) + "px");
+      });
+      b.addEventListener("pointerleave", function () {
+        b.style.setProperty("--mx", "0px");
+        b.style.setProperty("--my", "0px");
+      });
+    });
+  }
+
+  // Más bloques que entran suaves al bajar
+  document.querySelectorAll(".seccion__cabeza, .carrusel__info, .visor__panel, .visor__escena, .llamado, .banda__rejilla > div, .pie__rejilla > *")
+    .forEach(function (el) { el.classList.add("revelar"); });
+
   // Aparición suave al hacer scroll
   var elementos = document.querySelectorAll(".revelar");
   if ("IntersectionObserver" in window) {
