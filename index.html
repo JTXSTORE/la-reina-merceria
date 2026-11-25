@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="es-DO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>La Reina Mercería RD | Suministros y Manualidades en Santiago</title>
+  <meta name="description" content="Bisutería, jabonería, velas de cera de soya, mercería y artículos para el hogar. Mira los productos en 3D y visítanos en nuestras tres sucursales de Santiago, República Dominicana.">
+  <meta name="theme-color" content="#C2185B">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_DO">
+  <meta property="og:title" content="La Reina Mercería RD | Suministros y Manualidades">
+  <meta property="og:description" content="Todo para tus manualidades y tu emprendimiento. Mira los productos en 3D. Tres sucursales en Santiago.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script>document.documentElement.classList.add("js");</script>
+
+  <!-- Three.js para los productos en 3D (versión fija) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="js/tienda3d.js"></script>
+
+  <script type="application/ld+json">
+  [
+    {"@context":"https://schema.org","@type":"Store","name":"La Reina Mercería RD — Rafael Vidal","telephone":"+1-809-382-3277",
+     "address":{"@type":"PostalAddress","streetAddress":"Rafael Vidal esq. Calle 7","addressLocality":"Santiago de los Caballeros","addressCountry":"DO"},
+     "sameAs":["https://www.instagram.com/mercerialareina2/"]},
+    {"@context":"https://schema.org","@type":"Store","name":"La Reina Mercería RD — Beller","telephone":"+1-809-241-5077",
+     "address":{"@type":"PostalAddress","streetAddress":"Calle Beller #110","addressLocality":"Santiago de los Caballeros","addressCountry":"DO"},
+     "sameAs":["https://www.instagram.com/mercerialareina2/"]},
+    {"@context":"https://schema.org","@type":"Store","name":"La Reina Mercería RD — Restauración","telephone":"+1-809-724-8283",
+     "address":{"@type":"PostalAddress","streetAddress":"Calle Restauración #39","addressLocality":"Santiago de los Caballeros","addressCountry":"DO"},
+     "sameAs":["https://www.instagram.com/mercerialareina2/"]}
+  ]
+  </script>
+</head>
+<body>
+
+<!-- Íconos (trazos al estilo Lucide). Se usan con <svg class="icono"><use href="#i-..."/></svg> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9 10.5c.4 1.6 2.4 3.6 4 4l1.2-1.2 2 .9-.4 1.6c-3.5.6-7.7-3.6-7.1-7.1l1.6-.4.9 2z"/></symbol>
+  <symbol id="i-telefono" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-cerrar" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-cubo" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></symbol>
+  <symbol id="i-girar" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></symbol>
+  <symbol id="i-reiniciar" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+  <symbol id="i-acercar" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6M8 11h6"/></symbol>
+  <symbol id="i-alejar" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/></symbol>
+  <symbol id="i-mano" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-4 0"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></symbol>
+  <symbol id="i-gema" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></symbol>
+  <symbol id="i-jabon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="9" rx="3"/><path d="M7 15.5h10"/><circle cx="8" cy="6" r="2"/><circle cx="14" cy="4.5" r="1.5"/><circle cx="17.5" cy="7.5" r="1"/></symbol>
+  <symbol id="i-vela" viewBox="0 0 24 24"><path d="M12 2c1.6 2 2.2 3.1 2.2 4.1a2.2 2.2 0 0 1-4.4 0C9.8 5.1 10.4 4 12 2z"/><path d="M12 8.5V10"/><rect x="8" y="10" width="8" height="11" rx="1.5"/><path d="M8 13.5c1.3.8 2.7.8 4 0s2.7-.8 4 0"/></symbol>
+  <symbol id="i-carrete" viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="3" rx="1"/><rect x="5" y="18.5" width="14" height="3" rx="1"/><path d="M7.5 5.5v13M16.5 5.5v13"/><path d="M7.5 8.5l9 2M7.5 12.5l9 2"/></symbol>
+  <symbol id="i-greca" viewBox="0 0 24 24"><path d="M7 3h10l-2 7H9L7 3z"/><path d="M9 10h6l2 11H7l2-11z"/><path d="M17 5h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3"/><path d="M7 3 4.5 4.5"/></symbol>
+  <symbol id="i-tijera" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></symbol>
+  <symbol id="i-grupo" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-estrella" viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></symbol>
+  <symbol id="i-tienda" viewBox="0 0 24 24"><path d="M3 9 4.5 4h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13.5V21h14v-7.5"/><path d="M10 21v-5h4v5"/></symbol>
+  <symbol id="i-corona" viewBox="0 0 24 24"><path d="M3 18 2 7l5.5 4L12 4l4.5 7L22 7l-1 11z"/><path d="M4 21h16"/></symbol>
+</svg>
+
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+
+<!-- Aviso de temporada: se oculta solo después de la fecha de data-hasta (AAAA-MM-DD). -->
+<div class="promo" data-hasta="2026-11-28">
+  <p><strong>Black Friday:</strong> del 21 al 28 de noviembre, grandes ofertas con 20&nbsp;% de descuento.
+    <a href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre las ofertas de Black Friday.">Pregunta por WhatsApp</a></p>
+</div>
+
+<header class="cabecera">
+  <div class="contenedor cabecera__fila">
+    <a class="logo" href="#inicio" aria-label="La Reina Mercería, ir al inicio">
+      <svg class="logo__corona" aria-hidden="true"><use href="#i-corona"/></svg>
+      <span class="logo__texto"><span class="logo__reina">La Reina</span><span class="logo__merceria">Mercería</span></span>
+    </a>
+
+    <button class="menu-boton" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú">
+      <svg class="icono" aria-hidden="true"><use href="#i-menu"/></svg>
+    </button>
+
+    <nav id="menu" class="menu" aria-label="Principal">
+      <a href="#showroom">Showroom 3D</a>
+      <a href="#productos">Productos</a>
+      <a href="#talleres">Talleres</a>
+      <a href="#sucursales">Sucursales</a>
+      <a class="boton boton--verde boton--chico" href="https://wa.me/18092415077" data-wa="Hola, La Reina Mercería. Quiero hacer una consulta.">
+        <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>WhatsApp
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+
+  <!-- ============ INICIO ============ -->
+  <section id="inicio" class="portada">
+    <div class="contenedor portada__rejilla">
+      <div class="portada__texto">
+        <p class="etiqueta">Suministros &amp; Manualidades · Santiago, RD</p>
+        <h1>Todo lo que necesitas para crear, en un solo lugar</h1>
+        <p class="portada__bajada">Bisutería, jabonería, velas de cera de soya, mercería y artículos para el hogar. Materiales para tus manualidades y para hacer crecer tu emprendimiento.</p>
+        <div class="acciones">
+          <a class="boton boton--verde" href="https://wa.me/18092415077" data-wa="Hola, La Reina Mercería. Quiero información de sus productos.">
+            <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Escríbenos por WhatsApp
+          </a>
+          <a class="boton boton--borde" href="#showroom">
+            <svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Míralos en 3D
+          </a>
+        </div>
+        <ul class="cifras" aria-label="La Reina en números">
+          <li><strong>3</strong><span>sucursales en Santiago</span></li>
+          <li><strong>247 mil</strong><span>seguidores en Instagram</span></li>
+          <li><strong>4,000+</strong><span>publicaciones con ideas</span></li>
+        </ul>
+      </div>
+
+      <div class="portada__arte">
+        <!-- Aquí se dibujan los productos en 3D; la ilustración de abajo se ve mientras carga o si el 3D no está disponible -->
+        <div class="portada__3d"></div>
+        <svg viewBox="0 0 480 440" class="ilustracion" aria-hidden="true">
+          <defs>
+            <linearGradient id="g-hilo" x1="0" x2="1">
+              <stop offset="0" stop-color="#E04B86"/><stop offset="1" stop-color="#B3124F"/>
+            </linearGradient>
+            <linearGradient id="g-oro" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#F5D06B"/><stop offset="1" stop-color="#C9921E"/>
+            </linearGradient>
+          </defs>
+
+          <circle cx="245" cy="215" r="200" fill="#FCE4EF"/>
+          <circle cx="400" cy="70" r="44" fill="#E3F3D6"/>
+          <circle cx="60" cy="90" r="22" fill="#E3F3D6"/>
+
+          <g class="flota flota--1">
+            <rect x="70" y="60" width="120" height="22" rx="7" fill="#B9834F"/>
+            <rect x="82" y="82" width="96" height="150" fill="url(#g-hilo)"/>
+            <g stroke="#fff" stroke-opacity=".28" stroke-width="2">
+              <path d="M82 96l96 5M82 110l96 5M82 124l96 5M82 138l96 5M82 152l96 5M82 166l96 5M82 180l96 5M82 194l96 5M82 208l96 5M82 222l96 5"/>
+            </g>
+            <rect x="70" y="232" width="120" height="22" rx="7" fill="#B9834F"/>
+            <path d="M178 150 C 240 150, 245 75, 318 84" fill="none" stroke="#C2185B" stroke-width="3" stroke-linecap="round"/>
+            <path d="M312 96 L 382 38" stroke="#8E8E9C" stroke-width="5" stroke-linecap="round"/>
+          </g>
+
+          <g class="flota flota--2" transform="translate(385 175)">
+            <g fill="url(#g-oro)" stroke="#B07D14" stroke-width="1.5">
+              <ellipse rx="17" ry="30" cy="-24"/>
+              <ellipse rx="17" ry="30" cy="-24" transform="rotate(72)"/>
+              <ellipse rx="17" ry="30" cy="-24" transform="rotate(144)"/>
+              <ellipse rx="17" ry="30" cy="-24" transform="rotate(216)"/>
+              <ellipse rx="17" ry="30" cy="-24" transform="rotate(288)"/>
+            </g>
+            <circle r="11" fill="#F7E3A1" stroke="#B07D14" stroke-width="1.5"/>
+          </g>
+
+          <g class="flota flota--3">
+            <path d="M295 178c9 11 12 17 12 23a12 12 0 0 1-24 0c0-6 3-12 12-23z" fill="#F2A93B"/>
+            <path d="M295 213v12" stroke="#4A3A30" stroke-width="3" stroke-linecap="round"/>
+            <rect x="250" y="222" width="90" height="108" rx="16" fill="#FFFFFF" stroke="#EAD8C6" stroke-width="3"/>
+            <rect x="258" y="236" width="74" height="86" rx="10" fill="#F8EEDF"/>
+            <rect x="268" y="262" width="54" height="30" rx="6" fill="#2F7A16"/>
+          </g>
+
+          <g class="flota flota--1" transform="rotate(-8 390 330)">
+            <rect x="335" y="300" width="112" height="62" rx="18" fill="#A98BDB"/>
+          </g>
+
+          <g class="flota flota--2">
+            <circle cx="125" cy="318" r="36" fill="#6DBE3C"/>
+            <g fill="#3F7F1D"><circle cx="116" cy="309" r="4.5"/><circle cx="134" cy="309" r="4.5"/><circle cx="116" cy="327" r="4.5"/><circle cx="134" cy="327" r="4.5"/></g>
+            <circle cx="204" cy="290" r="20" fill="url(#g-oro)"/>
+          </g>
+
+          <path d="M70 370 Q 165 430 260 375" fill="none" stroke="#D9C4AE" stroke-width="2"/>
+          <g fill="#FFFDF8" stroke="#E3CFB8" stroke-width="2">
+            <circle cx="70" cy="370" r="9"/><circle cx="89" cy="381" r="9"/><circle cx="108" cy="389" r="9"/>
+            <circle cx="127" cy="396" r="9"/><circle cx="146" cy="400" r="9"/><circle cx="165" cy="401" r="9"/>
+            <circle cx="184" cy="401" r="9"/><circle cx="203" cy="398" r="9"/><circle cx="222" cy="392" r="9"/>
+            <circle cx="241" cy="385" r="9"/><circle cx="260" cy="375" r="9"/>
+          </g>
+        </svg>
+        <p class="portada__pista"><svg class="icono" aria-hidden="true"><use href="#i-mano"/></svg>Toca un producto para verlo de cerca</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHOWROOM 3D ============ -->
+  <section id="showroom" class="showroom" aria-labelledby="showroom-titulo">
+    <div class="contenedor">
+      <header class="seccion__cabeza">
+        <p class="etiqueta etiqueta--clara">Showroom 3D</p>
+        <h2 id="showroom-titulo">Tómalo en tus manos</h2>
+        <p>Gira cada producto con el dedo o el mouse, acércalo y míralo por todos lados, como si lo tuvieras en la tienda.</p>
+      </header>
+
+      <div class="visor">
+        <div class="visor__escena" id="visor-escena">
+          <div class="visor__estado" role="status">
+            <span class="girador" aria-hidden="true"></span>
+            <span class="visor__cargando">Preparando el showroom…</span>
+            <span class="visor__sin3d">Tu navegador no puede mostrar 3D. Escríbenos por WhatsApp y te mandamos fotos y videos de lo que buscas.</span>
+          </div>
+          <div class="visor__controles" role="toolbar" aria-label="Controles del visor 3D">
+            <button type="button" class="control" id="visor-girar" aria-pressed="true" aria-label="Girar solo" title="Girar solo">
+              <svg class="icono" aria-hidden="true"><use href="#i-girar"/></svg>
+            </button>
+            <button type="button" class="control" id="visor-acercar" aria-label="Acercar" title="Acercar">
+              <svg class="icono" aria-hidden="true"><use href="#i-acercar"/></svg>
+            </button>
+            <button type="button" class="control" id="visor-alejar" aria-label="Alejar" title="Alejar">
+              <svg class="icono" aria-hidden="true"><use href="#i-alejar"/></svg>
+            </button>
+            <button type="button" class="control" id="visor-reiniciar" aria-label="Volver a la vista inicial" title="Vista inicial">
+              <svg class="icono" aria-hidden="true"><use href="#i-reiniciar"/></svg>
+            </button>
+          </div>
+          <p class="visor__pista" id="visor-pista"><svg class="icono" aria-hidden="true"><use href="#i-mano"/></svg>Arrastra para girar · pellizca para acercar</p>
+        </div>
+
+        <div class="visor__chips" id="visor-chips" role="group" aria-label="Elige un producto"></div>
+
+        <div class="visor__panel">
+          <p class="visor__categoria" id="visor-categoria">Bisutería</p>
+          <h3 class="visor__nombre" id="visor-nombre">Flor dorada</h3>
+          <p class="visor__desc" id="visor-desc">Pieza dorada de cinco pétalos con perla al centro, para aretes, collares y prendedores.</p>
+          <a class="boton boton--verde" id="visor-whatsapp" href="https://wa.me/18092415077" target="_blank" rel="noopener">
+            <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Lo quiero: preguntar por WhatsApp
+          </a>
+          <p class="visor__nota">Modelos 3D de referencia. Pregunta por colores, tamaños y disponibilidad.</p>
+        </div>
+      </div>
+      <p class="solo-lector" aria-live="polite" id="visor-anuncio"></p>
+    </div>
+  </section>
+
+  <!-- ============ PRODUCTOS ============ -->
+  <section id="productos" class="seccion">
+    <div class="contenedor">
+      <header class="seccion__cabeza">
+        <p class="etiqueta">Nuestros productos</p>
+        <h2>Lo que encuentras en La Reina</h2>
+        <p>Pregunta por disponibilidad y precios: te respondemos por WhatsApp.</p>
+      </header>
+
+      <ul class="tarjetas">
+        <li class="revelar">
+          <article class="tarjeta inclinar">
+            <span class="tarjeta__icono tono-oro"><svg class="icono" aria-hidden="true"><use href="#i-gema"/></svg></span>
+            <h3>Bisutería y accesorios</h3>
+            <p>Dijes, flores doradas, perlas, aretes y piezas para armar tus propias prendas.</p>
+            <div class="tarjeta__pie">
+              <button class="enlace enlace--3d" type="button" data-ver3d="flor"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
+              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre bisutería y accesorios.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+            </div>
+          </article>
+        </li>
+        <li class="revelar">
+          <article class="tarjeta inclinar">
+            <span class="tarjeta__icono tono-lila"><svg class="icono" aria-hidden="true"><use href="#i-jabon"/></svg></span>
+            <h3>Jabonería artesanal</h3>
+            <p>Bases para jabón, moldes de silicona y lo que necesitas para tus jabones hechos a mano.</p>
+            <div class="tarjeta__pie">
+              <button class="enlace enlace--3d" type="button" data-ver3d="jabon"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
+              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre materiales para jabones.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+            </div>
+          </article>
+        </li>
+        <li class="revelar">
+          <article class="tarjeta inclinar">
+            <span class="tarjeta__icono tono-naranja"><svg class="icono" aria-hidden="true"><use href="#i-vela"/></svg></span>
+            <h3>Velas y cera de soya</h3>
+            <p>Cera de soya y materiales para crear tus propias velas aromáticas.</p>
+            <div class="tarjeta__pie">
+              <button class="enlace enlace--3d" type="button" data-ver3d="vela"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
+              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre cera de soya y velas.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+            </div>
+          </article>
+        </li>
+        <li class="revelar">
+          <article class="tarjeta inclinar">
+            <span class="tarjeta__icono tono-rosa"><svg class="icono" aria-hidden="true"><use href="#i-carrete"/></svg></span>
+            <h3>Mercería</h3>
+            <p>Hilos, cintas, botones y lo esencial para coser, reparar y decorar.</p>
+            <div class="tarjeta__pie">
+              <button class="enlace enlace--3d" type="button" data-ver3d="carrete"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
+              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre artículos de mercería.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+            </div>
+          </article>
+        </li>
+        <li class="revelar">
+          <article class="tarjeta inclinar">
+            <span class="tarjeta__icono tono-verde"><svg class="icono" aria-hidden="true"><use href="#i-greca"/></svg></span>
+            <h3>Hogar y cocina</h3>
+            <p>Grecas de acero inoxidable, servilleteros y detalles para la casa.</p>
+            <div class="tarjeta__pie">
+              <button class="enlace enlace--3d" type="button" data-ver3d="greca"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
+              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre artículos para el hogar.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+            </div>
+          </article>
+        </li>
+        <li class="revelar">
+          <article class="tarjeta inclinar">
+            <span class="tarjeta__icono tono-azul"><svg class="icono" aria-hidden="true"><use href="#i-tijera"/></svg></span>
+            <h3>Manualidades</h3>
+            <p>Botones, materiales para decoración, regalos y proyectos de temporada.</p>
+            <div class="tarjeta__pie">
+              <button class="enlace enlace--3d" type="button" data-ver3d="boton"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
+              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre materiales para manualidades.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+            </div>
+          </article>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ TALLERES ============ -->
+  <section id="talleres" class="banda">
+    <div class="contenedor banda__rejilla">
+      <div>
+        <p class="etiqueta etiqueta--clara">Para emprendedoras</p>
+        <h2>La Fábrica de Emprendedores</h2>
+        <p>Aprende a hacer jabones, velas y bisutería en nuestros talleres y convierte lo que haces con tus manos en tu negocio. Pregunta por las próximas fechas.</p>
+        <a class="boton boton--blanco" href="https://wa.me/18092415077" data-wa="Hola, quiero información de los talleres de La Fábrica de Emprendedores.">
+          <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Quiero información de los talleres
+        </a>
+      </div>
+      <ul class="puntos">
+        <li class="revelar"><svg class="icono" aria-hidden="true"><use href="#i-estrella"/></svg><div><strong>Talleres prácticos</strong><span>Aprendes haciendo, paso a paso y en grupo.</span></div></li>
+        <li class="revelar"><svg class="icono" aria-hidden="true"><use href="#i-tienda"/></svg><div><strong>Materiales en tienda</strong><span>Lo que usas en el taller lo consigues en nuestras sucursales.</span></div></li>
+        <li class="revelar"><svg class="icono" aria-hidden="true"><use href="#i-grupo"/></svg><div><strong>Comunidad de mujeres emprendedoras</strong><span>Ideas, apoyo y ganas de crecer juntas.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ SUCURSALES ============ -->
+  <section id="sucursales" class="seccion">
+    <div class="contenedor">
+      <header class="seccion__cabeza">
+        <p class="etiqueta">Sucursales</p>
+        <h2>Visítanos en Santiago</h2>
+        <p>Tres sucursales para atenderte.</p>
+      </header>
+
+      <ul class="sucursales">
+        <li class="sucursal revelar">
+          <h3>Rafael Vidal</h3>
+          <p class="dato"><svg class="icono" aria-hidden="true"><use href="#i-pin"/></svg>Rafael Vidal esq. Calle 7, Santiago</p>
+          <p class="dato"><svg class="icono" aria-hidden="true"><use href="#i-telefono"/></svg><a href="tel:+18093823277">809-382-3277</a></p>
+          <div class="sucursal__acciones">
+            <a class="boton boton--verde boton--chico" href="tel:+18093823277"><svg class="icono" aria-hidden="true"><use href="#i-telefono"/></svg>Llamar</a>
+            <a class="boton boton--borde boton--chico" href="https://www.google.com/maps/search/?api=1&amp;query=La+Reina+Merceria+Rafael+Vidal+esquina+Calle+7+Santiago+Republica+Dominicana" target="_blank" rel="noopener">Cómo llegar</a>
+          </div>
+        </li>
+        <li class="sucursal revelar">
+          <h3>Beller</h3>
+          <p class="dato"><svg class="icono" aria-hidden="true"><use href="#i-pin"/></svg>Calle Beller #110, Santiago</p>
+          <p class="dato"><svg class="icono" aria-hidden="true"><use href="#i-telefono"/></svg><a href="tel:+18092415077">809-241-5077</a> · WhatsApp</p>
+          <div class="sucursal__acciones">
+            <a class="boton boton--verde boton--chico" href="https://wa.me/18092415077" data-wa="Hola, les escribo para la sucursal Beller."><svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>WhatsApp</a>
+            <a class="boton boton--borde boton--chico" href="https://www.google.com/maps/search/?api=1&amp;query=La+Reina+Merceria+Calle+Beller+110+Santiago+Republica+Dominicana" target="_blank" rel="noopener">Cómo llegar</a>
+          </div>
+        </li>
+        <li class="sucursal revelar">
+          <h3>Restauración</h3>
+          <p class="dato"><svg class="icono" aria-hidden="true"><use href="#i-pin"/></svg>Calle Restauración #39, Santiago</p>
+          <p class="dato"><svg class="icono" aria-hidden="true"><use href="#i-telefono"/></svg><a href="tel:+18097248283">809-724-8283</a></p>
+          <div class="sucursal__acciones">
+            <a class="boton boton--verde boton--chico" href="tel:+18097248283"><svg class="icono" aria-hidden="true"><use href="#i-telefono"/></svg>Llamar</a>
+            <a class="boton boton--borde boton--chico" href="https://www.google.com/maps/search/?api=1&amp;query=La+Reina+Merceria+Calle+Restauracion+39+Santiago+Republica+Dominicana" target="_blank" rel="noopener">Cómo llegar</a>
+          </div>
+        </li>
+      </ul>
+
+      <!-- PENDIENTE: poner aquí el horario real de las sucursales cuando la tienda lo confirme. -->
+      <p class="nota"><svg class="icono" aria-hidden="true"><use href="#i-reloj"/></svg>Confirma el horario de cada sucursal por teléfono o WhatsApp antes de tu visita.</p>
+    </div>
+  </section>
+
+  <!-- ============ INSTAGRAM / CONTACTO ============ -->
+  <section id="contacto" class="seccion seccion--suave">
+    <div class="contenedor llamado">
+      <div class="llamado__texto">
+        <p class="etiqueta">Síguenos</p>
+        <h2>Novedades, ofertas e ideas todos los días</h2>
+        <p>Más de 247 mil personas siguen <strong>@mercerialareina2</strong> en Instagram. Mira lo que acaba de llegar y escríbenos para apartarlo.</p>
+      </div>
+      <div class="acciones">
+        <a class="boton boton--magenta" href="https://www.instagram.com/mercerialareina2/" target="_blank" rel="noopener">
+          <svg class="icono" aria-hidden="true"><use href="#i-instagram"/></svg>Ver Instagram
+        </a>
+        <a class="boton boton--verde" href="https://wa.me/18092415077" data-wa="Hola, La Reina Mercería. Quiero hacer una consulta.">
+          <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Escribir por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="contenedor pie__rejilla">
+    <div>
+      <a class="logo logo--pie" href="#inicio" aria-label="La Reina Mercería, ir al inicio">
+        <svg class="logo__corona" aria-hidden="true"><use href="#i-corona"/></svg>
+        <span class="logo__texto"><span class="logo__reina">La Reina</span><span class="logo__merceria">Mercería</span></span>
+      </a>
+      <p>Suministros &amp; Manualidades en Santiago, República Dominicana.</p>
+    </div>
+    <nav aria-label="Pie de página">
+      <h3>Navegación</h3>
+      <a href="#showroom">Showroom 3D</a>
+      <a href="#productos">Productos</a>
+      <a href="#talleres">Talleres</a>
+      <a href="#sucursales">Sucursales</a>
+    </nav>
+    <div>
+      <h3>Contacto</h3>
+      <a href="https://wa.me/18092415077">WhatsApp 809-241-5077</a>
+      <a href="https://www.instagram.com/mercerialareina2/" target="_blank" rel="noopener">Instagram @mercerialareina2</a>
+    </div>
+  </div>
+  <p class="pie__legal contenedor">© <span id="anio">2026</span> La Reina Mercería RD. Todos los derechos reservados.</p>
+</footer>
+
+<a class="whatsapp-flotante" href="https://wa.me/18092415077" data-wa="Hola, La Reina Mercería. Quiero hacer una consulta." aria-label="Escríbenos por WhatsApp">
+  <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>
+</a>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>
