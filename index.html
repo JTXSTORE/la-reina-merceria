@@ -94,8 +94,8 @@
     </button>
 
     <nav id="menu" class="menu" aria-label="Principal">
-      <a href="#showroom">Showroom 3D</a>
       <a href="#productos">Productos</a>
+      <a href="#showroom">Showroom 3D</a>
       <a href="#talleres">Talleres</a>
       <a href="#sucursales">Sucursales</a>
       <a class="boton boton--verde boton--chico" href="https://wa.me/18092415077" data-wa="Hola, La Reina Mercería. Quiero hacer una consulta.">
@@ -118,8 +118,8 @@
           <a class="boton boton--verde" href="https://wa.me/18092415077" data-wa="Hola, La Reina Mercería. Quiero información de sus productos.">
             <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Escríbenos por WhatsApp
           </a>
-          <a class="boton boton--borde" href="#showroom">
-            <svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Míralos en 3D
+          <a class="boton boton--borde" href="#productos">
+            <svg class="icono" aria-hidden="true"><use href="#i-tienda"/></svg>Ver productos y precios
           </a>
         </div>
         <ul class="cifras" aria-label="La Reina en números">
@@ -199,6 +199,27 @@
     </div>
   </section>
 
+  <!-- ============ VITRINA (fotos reales de Instagram; datos en js/productos.js) ============ -->
+  <section id="productos" class="vitrina" aria-labelledby="vitrina-titulo">
+    <div class="contenedor">
+      <div class="vitrina__cabeza">
+        <header class="seccion__cabeza">
+          <p class="etiqueta">Vitrina</p>
+          <h2 id="vitrina-titulo">Lo que tenemos en tienda</h2>
+          <p>Toca cualquier producto para verlo de cerca y girarlo como si lo tuvieras en la mano.</p>
+        </header>
+        <p class="vitrina__nota">Precios publicados en nuestro Instagram en octubre y noviembre de 2026. Confirma existencia y precio por WhatsApp.</p>
+      </div>
+      <div class="vitrina__filtros" id="vitrina-filtros" role="group" aria-label="Filtrar por categoría"></div>
+      <ul class="vitrina__lista" id="vitrina-lista"></ul>
+      <p class="vitrina__mas">
+        <a class="boton boton--borde" href="https://www.instagram.com/mercerialareina2/" target="_blank" rel="noopener">
+          <svg class="icono" aria-hidden="true"><use href="#i-instagram"/></svg>Ver más productos en Instagram
+        </a>
+      </p>
+    </div>
+  </section>
+
   <!-- ============ SHOWROOM 3D ============ -->
   <section id="showroom" class="showroom" aria-labelledby="showroom-titulo">
     <div class="contenedor">
@@ -248,99 +269,19 @@
     </div>
   </section>
 
-  <!-- ============ PRODUCTOS ============ -->
-  <section id="productos" class="seccion">
-    <div class="contenedor">
-      <header class="seccion__cabeza">
-        <p class="etiqueta">Nuestros productos</p>
-        <h2>Lo que encuentras en La Reina</h2>
-        <p>Pregunta por disponibilidad y precios: te respondemos por WhatsApp.</p>
-      </header>
-
-      <ul class="tarjetas">
-        <li class="revelar">
-          <article class="tarjeta inclinar">
-            <span class="tarjeta__icono tono-oro"><svg class="icono" aria-hidden="true"><use href="#i-gema"/></svg></span>
-            <h3>Bisutería y accesorios</h3>
-            <p>Dijes, flores doradas, perlas, aretes y piezas para armar tus propias prendas.</p>
-            <div class="tarjeta__pie">
-              <button class="enlace enlace--3d" type="button" data-ver3d="flor"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
-              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre bisutería y accesorios.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-            </div>
-          </article>
-        </li>
-        <li class="revelar">
-          <article class="tarjeta inclinar">
-            <span class="tarjeta__icono tono-lila"><svg class="icono" aria-hidden="true"><use href="#i-jabon"/></svg></span>
-            <h3>Jabonería artesanal</h3>
-            <p>Bases para jabón, moldes de silicona y lo que necesitas para tus jabones hechos a mano.</p>
-            <div class="tarjeta__pie">
-              <button class="enlace enlace--3d" type="button" data-ver3d="jabon"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
-              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre materiales para jabones.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-            </div>
-          </article>
-        </li>
-        <li class="revelar">
-          <article class="tarjeta inclinar">
-            <span class="tarjeta__icono tono-naranja"><svg class="icono" aria-hidden="true"><use href="#i-vela"/></svg></span>
-            <h3>Velas y cera de soya</h3>
-            <p>Cera de soya y materiales para crear tus propias velas aromáticas.</p>
-            <div class="tarjeta__pie">
-              <button class="enlace enlace--3d" type="button" data-ver3d="vela"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
-              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre cera de soya y velas.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-            </div>
-          </article>
-        </li>
-        <li class="revelar">
-          <article class="tarjeta inclinar">
-            <span class="tarjeta__icono tono-rosa"><svg class="icono" aria-hidden="true"><use href="#i-carrete"/></svg></span>
-            <h3>Mercería</h3>
-            <p>Hilos, cintas, botones y lo esencial para coser, reparar y decorar.</p>
-            <div class="tarjeta__pie">
-              <button class="enlace enlace--3d" type="button" data-ver3d="carrete"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
-              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre artículos de mercería.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-            </div>
-          </article>
-        </li>
-        <li class="revelar">
-          <article class="tarjeta inclinar">
-            <span class="tarjeta__icono tono-verde"><svg class="icono" aria-hidden="true"><use href="#i-greca"/></svg></span>
-            <h3>Hogar y cocina</h3>
-            <p>Grecas de acero inoxidable, servilleteros y detalles para la casa.</p>
-            <div class="tarjeta__pie">
-              <button class="enlace enlace--3d" type="button" data-ver3d="greca"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
-              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre artículos para el hogar.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-            </div>
-          </article>
-        </li>
-        <li class="revelar">
-          <article class="tarjeta inclinar">
-            <span class="tarjeta__icono tono-azul"><svg class="icono" aria-hidden="true"><use href="#i-tijera"/></svg></span>
-            <h3>Manualidades</h3>
-            <p>Botones, materiales para decoración, regalos y proyectos de temporada.</p>
-            <div class="tarjeta__pie">
-              <button class="enlace enlace--3d" type="button" data-ver3d="boton"><svg class="icono" aria-hidden="true"><use href="#i-cubo"/></svg>Ver en 3D</button>
-              <a class="enlace" href="https://wa.me/18092415077" data-wa="Hola, quiero información sobre materiales para manualidades.">Preguntar <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-            </div>
-          </article>
-        </li>
-      </ul>
-    </div>
-  </section>
-
   <!-- ============ TALLERES ============ -->
   <section id="talleres" class="banda">
     <div class="contenedor banda__rejilla">
       <div>
         <p class="etiqueta etiqueta--clara">Para emprendedoras</p>
         <h2>La Fábrica de Emprendedores</h2>
-        <p>Aprende a hacer jabones, velas y bisutería en nuestros talleres y convierte lo que haces con tus manos en tu negocio. Pregunta por las próximas fechas.</p>
+        <p>Aprende, crea y emprende. En talleres como el de velas artesanales aprendes técnicas prácticas y consigues las herramientas para dar los primeros pasos hacia tu propio negocio. Pregunta por las próximas fechas.</p>
         <a class="boton boton--blanco" href="https://wa.me/18092415077" data-wa="Hola, quiero información de los talleres de La Fábrica de Emprendedores.">
           <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Quiero información de los talleres
         </a>
       </div>
       <ul class="puntos">
-        <li class="revelar"><svg class="icono" aria-hidden="true"><use href="#i-estrella"/></svg><div><strong>Talleres prácticos</strong><span>Aprendes haciendo, paso a paso y en grupo.</span></div></li>
+        <li class="revelar"><svg class="icono" aria-hidden="true"><use href="#i-estrella"/></svg><div><strong>Talleres prácticos</strong><span>Velas artesanales y más: aprendes haciendo, paso a paso y en grupo.</span></div></li>
         <li class="revelar"><svg class="icono" aria-hidden="true"><use href="#i-tienda"/></svg><div><strong>Materiales en tienda</strong><span>Lo que usas en el taller lo consigues en nuestras sucursales.</span></div></li>
         <li class="revelar"><svg class="icono" aria-hidden="true"><use href="#i-grupo"/></svg><div><strong>Comunidad de mujeres emprendedoras</strong><span>Ideas, apoyo y ganas de crecer juntas.</span></div></li>
       </ul>
@@ -422,8 +363,8 @@
     </div>
     <nav aria-label="Pie de página">
       <h3>Navegación</h3>
-      <a href="#showroom">Showroom 3D</a>
       <a href="#productos">Productos</a>
+      <a href="#showroom">Showroom 3D</a>
       <a href="#talleres">Talleres</a>
       <a href="#sucursales">Sucursales</a>
     </nav>
@@ -440,6 +381,48 @@
   <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>
 </a>
 
+<dialog class="lupa" id="lupa" aria-labelledby="lupa-nombre">
+  <div class="lupa__cuerpo">
+    <div class="lupa__escena">
+      <div class="lupa__objeto" id="lupa-objeto">
+        <img id="lupa-img" alt="">
+        <span class="lupa__brillo" aria-hidden="true"></span>
+      </div>
+      <p class="lupa__pista" id="lupa-pista"><svg class="icono" aria-hidden="true"><use href="#i-mano"/></svg>Arrastra para girarlo · doble toque para acercar</p>
+    </div>
+    <div class="lupa__info">
+      <p class="lupa__cat" id="lupa-cat"></p>
+      <h2 id="lupa-nombre"></h2>
+      <p class="lupa__precio" id="lupa-precio"></p>
+      <p class="lupa__precio2" id="lupa-precio2"></p>
+      <p class="lupa__detalle" id="lupa-detalle"></p>
+      <div class="lupa__acciones">
+        <a class="boton boton--verde" id="lupa-wa" href="https://wa.me/18092415077" target="_blank" rel="noopener">
+          <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Lo quiero
+        </a>
+        <a class="boton boton--borde" id="lupa-ig" href="https://www.instagram.com/mercerialareina2/" target="_blank" rel="noopener">
+          <svg class="icono" aria-hidden="true"><use href="#i-instagram"/></svg>Ver en Instagram
+        </a>
+      </div>
+      <p class="lupa__fecha" id="lupa-fecha"></p>
+    </div>
+    <button type="button" class="lupa__giro" id="lupa-giroscopio" aria-pressed="false" hidden>
+      <svg class="icono" aria-hidden="true"><use href="#i-girar"/></svg>Moverlo con el celular
+    </button>
+    <button type="button" class="lupa__cerrar" id="lupa-cerrar" aria-label="Cerrar">
+      <svg class="icono" aria-hidden="true"><use href="#i-cerrar"/></svg>
+    </button>
+    <button type="button" class="lupa__nav lupa__nav--ant" id="lupa-ant" aria-label="Producto anterior">
+      <svg class="icono" aria-hidden="true" style="transform: rotate(180deg)"><use href="#i-flecha"/></svg>
+    </button>
+    <button type="button" class="lupa__nav lupa__nav--sig" id="lupa-sig" aria-label="Producto siguiente">
+      <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg>
+    </button>
+  </div>
+</dialog>
+
+<script src="js/productos.js" defer></script>
+<script src="js/vitrina.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

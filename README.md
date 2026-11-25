@@ -9,9 +9,24 @@ Es un sitio estático (HTML, CSS y JavaScript sin dependencias) pensado para pub
 index.html        la página completa
 css/estilos.css   colores, tipografía y diseño
 js/main.js        menú móvil, enlaces de WhatsApp, aviso de temporada, tarjetas que se inclinan
+js/productos.js   los productos de la vitrina (nombre, precio, foto, publicación de Instagram)
+js/vitrina.js     vitrina con filtros y la vista de cerca para girar cada producto
 js/tienda3d.js    productos en 3D (portada flotante y showroom «Tómalo en tus manos»)
+img/productos/    fotos de la vitrina (WebP, tomadas de @mercerialareina2)
 img/favicon.svg   ícono de la pestaña
 ```
+
+## Vitrina (productos reales)
+
+Los 43 productos salen de las publicaciones de Instagram de @mercerialareina2 de octubre y noviembre de 2026,
+con el precio que tenían publicado. Para cambiar o agregar uno:
+
+1. Guarda la foto en `img/productos/` (mejor en `.webp` o `.jpg`, de unos 720 px de ancho).
+2. En `js/productos.js` copia un bloque y cambia `categoria`, `nombre`, `precio`, `unidad`, `detalle`, `foto`,
+   `instagram` y `fecha`. Las categorías y sus filtros se arman solos.
+
+Al tocar un producto se abre en grande: se gira arrastrando, se acerca con doble toque y, en celular, se puede
+mover inclinando el teléfono.
 
 ## Productos en 3D
 
