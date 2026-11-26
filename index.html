@@ -105,6 +105,7 @@
   <symbol id="i-basura" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
   <symbol id="i-pausa" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="m7 4 13 8-13 8V4z"/></symbol>
+  <symbol id="i-expandir" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></symbol>
   <symbol id="i-chispa" viewBox="0 0 24 24"><path d="M12 2c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z"/></symbol>
   <symbol id="i-corona" viewBox="0 0 24 24"><path d="M3 18 2 7l5.5 4L12 4l4.5 7L22 7l-1 11z"/><path d="M4 21h16"/></symbol>
 </svg>
@@ -307,15 +308,40 @@
       <header class="seccion__cabeza">
         <p class="etiqueta etiqueta--clara">Showroom 3D</p>
         <h2 id="showroom-titulo">Tómalo en tus manos</h2>
-        <p>Productos de la tienda modelados en 3D: gíralos con el dedo o el mouse, acércalos y cambia el color, como si los tuvieras en la mano.</p>
+        <p>Mira el set de trébol puesto y en todos sus colores, y gira en 3D los productos de la tienda: acércalos y cambia el color, como si los tuvieras en la mano.</p>
       </header>
 
       <div class="visor">
-        <div class="visor__escena" id="visor-escena">
+        <div class="visor__escena modo-video" id="visor-escena">
           <div class="visor__estado" role="status">
             <span class="girador" aria-hidden="true"></span>
             <span class="visor__cargando">Preparando el showroom…</span>
             <span class="visor__sin3d">Tu navegador no puede mostrar 3D. Escríbenos por WhatsApp y te mandamos fotos y videos de lo que buscas.</span>
+          </div>
+          <div class="visor__video en-espera" id="visor-video">
+            <video id="visor-video-el" muted playsinline loop preload="none" width="1080" height="1350"
+                   poster="video/trebol-poster.webp"
+                   aria-label="Video del set de trébol: puesto en una modelo y en cada uno de sus colores">
+              <source src="video/trebol-av1.mp4" type='video/mp4; codecs="av01.0.08M.08"'>
+              <source src="video/trebol.mp4" type="video/mp4">
+            </video>
+            <div class="visor__capitulos" id="visor-capitulos" aria-hidden="true"></div>
+            <button type="button" class="visor__ver" id="visor-video-ver">
+              <svg class="icono" aria-hidden="true"><use href="#i-play"/></svg>Ver video
+            </button>
+            <div class="visor__controles visor__controles--video" role="toolbar" aria-label="Controles del video">
+              <button type="button" class="control" id="visor-video-pausa" aria-label="Reproducir video" title="Reproducir">
+                <svg class="icono" aria-hidden="true"><use href="#i-play"/></svg>
+              </button>
+              <button type="button" class="control" id="visor-video-grande" aria-label="Ver el video en pantalla completa" title="Pantalla completa">
+                <svg class="icono" aria-hidden="true"><use href="#i-expandir"/></svg>
+              </button>
+            </div>
+            <button type="button" class="visor__color" id="visor-video-color" hidden>
+              <span class="chip__punto" aria-hidden="true"></span>
+              <span class="visor__color-texto"></span>
+              <span class="visor__color-accion">Elegir</span>
+            </button>
           </div>
           <div class="visor__controles" role="toolbar" aria-label="Controles del visor 3D">
             <button type="button" class="control" id="visor-girar" aria-pressed="true" aria-label="Girar solo" title="Girar solo">
@@ -337,10 +363,10 @@
         <div class="visor__chips" id="visor-chips" role="group" aria-label="Elige un producto"></div>
 
         <div class="visor__panel">
-          <p class="visor__categoria" id="visor-categoria">Cocina y hogar</p>
-          <h3 class="visor__nombre" id="visor-nombre">Greca de 3 tazas</h3>
-          <p class="visor__precio" id="visor-precio">RD$760 cada una</p>
-          <p class="visor__desc" id="visor-desc">Con detalles plateados y asa con apariencia de madera. Elige el color y gírala.</p>
+          <p class="visor__categoria" id="visor-categoria">Bisutería · Video</p>
+          <h3 class="visor__nombre" id="visor-nombre">Set de trébol: collar y topos</h3>
+          <p class="visor__precio" id="visor-precio">RD$250 el set en acero inoxidable · RD$300 en rodio 18K</p>
+          <p class="visor__desc" id="visor-desc">Míralo puesto y en cada color. Toca un color y el video te lo enseña de cerca.</p>
           <div class="visor__variantes" id="visor-variantes"></div>
           <a class="boton boton--verde" id="visor-whatsapp" href="https://wa.me/18092415077" target="_blank" rel="noopener">
             <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"/></svg>Lo quiero: preguntar por WhatsApp

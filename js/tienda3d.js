@@ -19,6 +19,230 @@ const V3 = THREE.Vector3;
 const WHATSAPP = "18092415077";
 const MOV_REDUCIDO = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+/* ---------------- Video del set de trébol (showroom) ---------------- */
+
+// Colores del set tal como salen en el video de la tienda
+const NOMBRE_COLOR = {
+  negro: "Negro", plateado: "Plateado", azul: "Azul marino", rojo: "Rojo",
+  verde: "Verde malaquita", fucsia: "Fucsia", leopardo: "Leopardo", rosado: "Rosado",
+};
+const MUESTRA = {
+  negro: "#151517",
+  plateado: "linear-gradient(135deg, #F4F5F7, #A3A9B1)",
+  azul: "#1B2A6B",
+  rojo: "#B3122B",
+  verde: "repeating-linear-gradient(135deg, #0B5E2E 0 3px, #1E9150 3px 6px)",
+  fucsia: "#D0105A",
+  leopardo: "radial-gradient(circle at 30% 32%, #3B2410 0 16%, transparent 17%), radial-gradient(circle at 68% 62%, #3B2410 0 14%, transparent 15%), radial-gradient(circle at 34% 76%, #3B2410 0 10%, transparent 11%), #C99A4B",
+  rosado: "#F4C9D4",
+};
+const NOMBRE_MATERIAL = { acero: "Acero inoxidable", rodio: "Rodio 18K" };
+
+// Tramos de video/trebol.mp4 (segundos): qué color y material se ve en cada uno.
+// «ver» es un cuadro limpio de ese tramo, para mostrarlo quieto cuando eligen el color.
+const CAPITULOS = [
+  { color: "negro", mat: "modelo", desde: 0, hasta: 2.875, ver: 1.312 },
+  { color: "plateado", mat: "modelo", desde: 2.875, hasta: 5.875, ver: 4.375 },
+  { color: "azul", mat: "modelo", desde: 5.875, hasta: 8.625, ver: 7.25 },
+  { color: "azul", mat: "rodio", desde: 8.625, hasta: 10.542, ver: 9.583 },
+  { color: "rojo", mat: "acero", desde: 10.542, hasta: 12.458, ver: 11.5 },
+  { color: "plateado", mat: "acero", desde: 12.458, hasta: 14.375, ver: 13.417 },
+  { color: "verde", mat: "acero", desde: 14.375, hasta: 16.292, ver: 15.333 },
+  { color: "fucsia", mat: "acero", desde: 16.292, hasta: 18.208, ver: 17.25 },
+  { color: "negro", mat: "acero", desde: 18.208, hasta: 20.125, ver: 19.167 },
+  { color: "azul", mat: "acero", desde: 20.125, hasta: 22.042, ver: 21.083 },
+  { color: "rojo", mat: "rodio", desde: 22.042, hasta: 23.958, ver: 23 },
+  { color: "leopardo", mat: "rodio", desde: 23.958, hasta: 25.875, ver: 24.917 },
+  { color: "rosado", mat: "rodio", desde: 25.875, hasta: 28.083, ver: 26.833 },
+];
+// Fotos pequeñas de cada tarjeta del video (para «Mi pedido»)
+const FOTO_TREBOL = (color, mat) => {
+  const hay = CAPITULOS.filter((c) => c.color === color && c.mat !== "modelo");
+  const una = hay.find((c) => c.mat === mat) || hay[0];
+  return una ? "img/productos/mini/trebol-" + una.color + "-" + una.mat + ".webp" : "img/productos/mini/DgLOYB2FhG0.webp";
+};
+
+function iniciarVideo(ui) {
+  const caja = ui.video;
+  const v = caja && caja.querySelector("video");
+  if (!v) return null;
+  v.dataset.listo = "1";
+  const escena = caja.parentElement;
+  const ahorro = !!(navigator.connection && navigator.connection.saveData);
+  let activo = escena.classList.contains("modo-video") || document.documentElement.classList.contains("sin-3d");
+  let visible = false;
+  let quiere = !MOV_REDUCIDO && !ahorro;   // reproducir solo mientras se ve, si la persona no lo pausó
+  let cargado = false;
+  let alElegir = null;
+  let elegido = {};
+  let actual = -1;
+
+  const barras = CAPITULOS.map((c) => {
+    const s = document.createElement("span");
+    s.style.flexGrow = (c.hasta - c.desde).toFixed(3);
+    ui.capitulos.appendChild(s);
+    return s;
+  });
+
+  const cargar = () => {
+    if (cargado) return;
+    cargado = true;
+    v.preload = "auto";
+    v.load();
+  };
+
+  function pintarBotones() {
+    const pausado = v.paused;
+    ui.videoPausa.setAttribute("aria-label", pausado ? "Reproducir video" : "Pausar video");
+    ui.videoPausa.title = pausado ? "Reproducir" : "Pausar";
+    ui.videoPausa.querySelector("use").setAttribute("href", pausado ? "#i-play" : "#i-pausa");
+  }
+
+  function decidir() {
+    if (activo && visible && quiere) {
+      cargar();
+      const intento = v.play();
+      if (intento && intento.catch) {
+        intento.catch(() => {
+          quiere = false;
+          if (!v.currentTime) caja.classList.add("en-espera");
+          pintarBotones();
+        });
+      }
+    } else if (!v.paused) {
+      v.pause();
+    }
+  }
+
+  function pintarColor() {
+    const c = CAPITULOS[actual];
+    if (!c || !ui.videoColor) return;
+    const nombre = NOMBRE_COLOR[c.color] + " · " + (c.mat === "modelo" ? "puesto" : NOMBRE_MATERIAL[c.mat]);
+    const ya = elegido.color === c.color && (c.mat === "modelo" || elegido.mat === c.mat);
+    ui.videoColor.querySelector(".chip__punto").style.setProperty("--c", MUESTRA[c.color]);
+    ui.videoColor.querySelector(".visor__color-texto").textContent = nombre;
+    ui.videoColor.querySelector(".visor__color-accion").textContent = ya ? "Elegido" : "Elegir";
+    ui.videoColor.classList.toggle("elegido", ya);
+    ui.videoColor.setAttribute("aria-label", (ya ? "Color elegido: " : "Elegir este color: ") + nombre);
+    ui.videoColor.hidden = !alElegir;
+  }
+
+  function pintarTiempo() {
+    const t = v.currentTime;
+    let k = CAPITULOS.findIndex((c) => t >= c.desde && t < c.hasta);
+    if (k < 0) k = CAPITULOS.length - 1;
+    barras.forEach((b, i) => {
+      const c = CAPITULOS[i];
+      const p = i < k ? 1 : i > k ? 0 : Math.min(1, Math.max(0, (t - c.desde) / (c.hasta - c.desde)));
+      b.style.setProperty("--p", p.toFixed(3));
+    });
+    if (k !== actual) {
+      actual = k;
+      pintarColor();
+    }
+  }
+
+  let cuadro = 0;
+  function seguir() {
+    cancelAnimationFrame(cuadro);
+    const paso = () => {
+      pintarTiempo();
+      if (!v.paused) cuadro = requestAnimationFrame(paso);
+    };
+    paso();
+  }
+
+  v.addEventListener("play", () => {
+    caja.classList.remove("en-espera");
+    pintarBotones();
+    seguir();
+  });
+  v.addEventListener("pause", pintarBotones);
+  v.addEventListener("seeked", pintarTiempo);
+  v.addEventListener("loadeddata", pintarTiempo);
+
+  ui.videoPausa.addEventListener("click", () => {
+    if (v.paused) {
+      quiere = true;
+      decidir();
+    } else {
+      quiere = false;
+      v.pause();
+    }
+  });
+  ui.videoVer.addEventListener("click", () => {
+    quiere = true;
+    decidir();
+  });
+  ui.videoColor.addEventListener("click", () => {
+    const c = CAPITULOS[actual];
+    if (c && alElegir) alElegir(c.color, c.mat === "modelo" ? null : c.mat);
+  });
+
+  // Pantalla completa: la caja entera (con sus controles); en iPhone, el reproductor del sistema
+  if (caja.requestFullscreen) {
+    ui.videoGrande.addEventListener("click", () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else caja.requestFullscreen().catch(() => {});
+    });
+    document.addEventListener("fullscreenchange", () => {
+      const dentro = document.fullscreenElement === caja;
+      ui.videoGrande.setAttribute("aria-label", dentro ? "Salir de pantalla completa" : "Ver el video en pantalla completa");
+      ui.videoGrande.title = dentro ? "Salir de pantalla completa" : "Pantalla completa";
+    });
+  } else if (v.webkitEnterFullscreen) {
+    ui.videoGrande.addEventListener("click", () => {
+      cargar();
+      v.webkitEnterFullscreen();
+    });
+  } else {
+    ui.videoGrande.hidden = true;
+  }
+
+  // Solo se descarga y se reproduce cuando el showroom está cerca o a la vista
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting && activo && quiere) cargar();
+  }, { rootMargin: "500px 0px" }).observe(escena);
+  new IntersectionObserver(([e]) => {
+    visible = e.isIntersecting;
+    decidir();
+  }, { threshold: 0.3 }).observe(escena);
+
+  function irA(color, mat, estricto) {
+    let k = CAPITULOS.findIndex((c) => c.color === color && c.mat === mat);
+    if (k < 0 && !estricto) k = CAPITULOS.findIndex((c) => c.color === color && c.mat !== "modelo");
+    if (k < 0 && !estricto) k = CAPITULOS.findIndex((c) => c.color === color);
+    if (k < 0) return;
+    quiere = false;
+    caja.classList.remove("en-espera");
+    cargar();
+    const ir = () => {
+      v.pause();
+      v.currentTime = CAPITULOS[k].ver;
+      pintarTiempo();
+    };
+    if (v.readyState >= 1) ir();
+    else v.addEventListener("loadedmetadata", ir, { once: true });
+  }
+
+  pintarBotones();
+  return {
+    activar(si) {
+      activo = si;
+      decidir();
+    },
+    irA,
+    marcar(op) {
+      elegido = { color: op.color, mat: op.mat };
+      pintarColor();
+    },
+    alElegir(fn) {
+      alElegir = fn;
+      pintarColor();
+    },
+  };
+}
+
 /* ---------------- Texturas dibujadas en canvas ---------------- */
 
 function lienzo(ancho, alto, dibujar) {
@@ -668,6 +892,18 @@ function crearChicle(op = {}) {
 
 const PRODUCTOS = [
   {
+    id: "trebol-video", real: true, video: true, chip: "Trébol en video",
+    nombre: "Set de trébol: collar y topos", categoria: "Bisutería · Video", color: "#18181B",
+    precio: "RD$250", unidad: "el set en acero inoxidable",
+    precios: { acero: ["RD$250", "el set en acero inoxidable"], rodio: ["RD$300", "el set en rodio 18K"] },
+    desc: "Míralo puesto y en cada color. Toca un color y el video te lo enseña de cerca.",
+    variantes: [
+      { clave: "color", nombre: "Color", opciones: Object.keys(NOMBRE_COLOR).map((k) => [k, NOMBRE_COLOR[k], MUESTRA[k]]) },
+      { clave: "mat", nombre: "Material", opciones: [["acero", NOMBRE_MATERIAL.acero], ["rodio", NOMBRE_MATERIAL.rodio]] },
+    ],
+    fotoDe: (op) => FOTO_TREBOL(op.color, op.mat),
+  },
+  {
     id: "greca", real: true, nombre: "Greca de 3 tazas", categoria: "Cocina y hogar", color: "#F2A6C6",
     precio: "RD$760", unidad: "cada una", pose: [0, 0.6, 0], foto: "img/productos/mini/De1jKxyltRx.webp",
     desc: "Con detalles plateados y asa con apariencia de madera. Elige el color y gírala.",
@@ -678,7 +914,7 @@ const PRODUCTOS = [
     crear: crearGrecaReal, modelo: null,
   },
   {
-    id: "trebol", real: true, nombre: "Set collar y topos de trébol", categoria: "Bisutería", color: "#18181B",
+    id: "trebol", real: true, nombre: "Set collar y topos de trébol", chip: "Trébol en 3D", categoria: "Bisutería", color: "#18181B",
     precio: "RD$250", unidad: "el set en acero inoxidable · RD$300 en rodio 18K", foto: "img/productos/mini/DgLOYB2FhG0.webp",
     desc: "Dije de trébol negro con borde dorado de bolitas, en cadena fina, y topos a juego.",
     crear: crearTrebol, modelo: null,
@@ -918,7 +1154,7 @@ function iniciarPortada(host, alElegir) {
 
 /* ---------------- Showroom: un producto en las manos ---------------- */
 
-function iniciarVisor(ui) {
+function iniciarVisor(ui, video) {
   const host = ui.escena;
   const renderer = crearRenderer(host,
     "Visor 3D del producto elegido. Arrastra para girarlo; usa la rueda, pellizca o los botones para acercarlo.");
@@ -930,7 +1166,11 @@ function iniciarVisor(ui) {
 
   const camara = new THREE.PerspectiveCamera(40, 1, 0.1, 60);
   camara.position.set(0, 1.5, 4.8);
-  ajustarTamano(renderer, camara, host);
+  // En el visor vertical se abre un poco el ángulo para que quepa el ancho del pedestal
+  const tan20 = Math.tan(THREE.MathUtils.degToRad(20));
+  ajustarTamano(renderer, camara, host, (aspecto) => {
+    camara.fov = aspecto < 1 ? THREE.MathUtils.radToDeg(2 * Math.atan(tan20 / Math.pow(aspecto, 0.75))) : 40;
+  });
 
   const controles = new OrbitControls(camara, renderer.domElement);
   Object.assign(controles, {
@@ -996,10 +1236,20 @@ function iniciarVisor(ui) {
       b.className = "chip";
       b.dataset.id = p.id;
       b.setAttribute("aria-pressed", "false");
-      const punto = document.createElement("span");
-      punto.className = "chip__punto";
-      punto.style.setProperty("--c", p.color);
-      b.append(punto, document.createTextNode(p.nombre));
+      if (p.video) {
+        const icono = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        icono.setAttribute("class", "chip__icono");
+        icono.setAttribute("aria-hidden", "true");
+        const uso = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        uso.setAttribute("href", "#i-play");
+        icono.appendChild(uso);
+        b.append(icono, document.createTextNode(p.chip || p.nombre));
+      } else {
+        const punto = document.createElement("span");
+        punto.className = "chip__punto";
+        punto.style.setProperty("--c", p.color);
+        b.append(punto, document.createTextNode(p.chip || p.nombre));
+      }
       b.addEventListener("click", () => seleccionar(p.id));
       fila.appendChild(b);
     });
@@ -1017,19 +1267,24 @@ function iniciarVisor(ui) {
     .map((v) => (v.opciones.find((o) => o[0] === op[v.clave]) || [])[1])
     .filter(Boolean).join(", ");
 
+  const precioDe = (p, op) => (p.precios && p.precios[op.mat]) || [p.precio, p.unidad];
+
   function mostrarDatos(p, op) {
     const extra = textoOpciones(p, op);
+    const [precio, unidad] = precioDe(p, op);
     ui.categoria.textContent = p.categoria;
     ui.nombre.textContent = p.nombre;
     ui.desc.textContent = p.desc;
-    ui.precio.hidden = !p.precio;
-    ui.precio.textContent = p.precio ? p.precio + (p.unidad ? " " + p.unidad : "") : "";
+    ui.precio.hidden = !precio;
+    ui.precio.textContent = precio ? precio + (unidad ? " " + unidad : "") : "";
     ui.whatsapp.href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(
       "Hola, La Reina Mercería. Me interesa: " + p.nombre + (extra ? " (" + extra + ")" : "") + ". ¿Lo tienen disponible?");
     if (ui.nota) {
-      ui.nota.textContent = p.real
-        ? "Modelo 3D hecho a partir de las fotos de la tienda. Pregunta por existencia y colores."
-        : "Modelo ilustrativo. Pregunta por colores, tamaños y disponibilidad.";
+      ui.nota.textContent = p.video
+        ? "Video de @mercerialareina2, hecho con inteligencia artificial. Pregunta por existencia y colores."
+        : p.real
+          ? "Modelo 3D hecho a partir de las fotos de la tienda. Pregunta por existencia y colores."
+          : "Modelo ilustrativo. Pregunta por colores, tamaños y disponibilidad.";
     }
     ui.variantes.replaceChildren();
     (p.variantes || []).forEach((v) => {
@@ -1068,7 +1323,7 @@ function iniciarVisor(ui) {
       ui.agregar.hidden = !p.real;
       etiquetaAgregar();
     }
-    ui.anuncio.textContent = p.nombre + (extra ? ", " + extra : "") + ", en 3D.";
+    ui.anuncio.textContent = p.nombre + (extra ? ", " + extra : "") + (p.video ? ", en video." : ", en 3D.");
   }
 
   let enPanel = null;
@@ -1085,27 +1340,57 @@ function iniciarVisor(ui) {
       if (!enPanel || !window.LaReinaPedido) return;
       const { p, extra } = enPanel;
       const op = opcionesDe(p);
+      const [precio, unidad] = precioDe(p, op);
       window.LaReinaPedido.agregar({
-        nombre: p.nombre, variante: extra, precio: p.precio, unidad: p.unidad,
-        foto: fotoVariante[op.color] || p.foto,
+        nombre: p.nombre, variante: extra, precio, unidad,
+        foto: p.fotoDe ? p.fotoDe(op) : fotoVariante[op.color] || p.foto,
       });
     });
     document.addEventListener("pedido:cambio", etiquetaAgregar);
   }
 
+  // Video o 3D: el visor muestra uno a la vez y el 3D no dibuja mientras está el video
+  let modoVideo = host.classList.contains("modo-video");
+  let visible3d = false;
+  function bucle() {
+    previo = null;
+    renderer.setAnimationLoop(visible3d && !modoVideo ? cuadro : null);
+  }
+  function ponerModo(siVideo) {
+    if (siVideo === modoVideo) return;
+    modoVideo = siVideo;
+    host.classList.toggle("modo-video", siVideo);
+    if (video) video.activar(siVideo);
+    bucle();
+  }
+  if (video) {
+    const pv = PRODUCTOS.find((x) => x.video);
+    video.alElegir((color, mat) => seleccionar(pv.id, mat ? { color, mat } : { color }, { sinSaltar: true }));
+  }
+
   let claveActual = "";
-  async function seleccionar(id, opciones) {
+  async function seleccionar(id, opciones, como = {}) {
     const p = PRODUCTOS.find((x) => x.id === id);
     if (!p) return;
     if (opciones) elegidas[id] = Object.assign({}, elegidas[id], opciones);
     const op = opcionesDe(p);
     const clave = id + JSON.stringify(op);
-    if (clave === claveActual) return;
+    // en el video, tocar otra vez el mismo color vuelve a llevar a ese color
+    if (clave === claveActual && !(p.video && opciones && !como.sinSaltar)) return;
     const otroProducto = id !== idActual;
     claveActual = clave;
     idActual = id;
     const mia = ++peticion;
     mostrarDatos(p, op);
+    if (p.video) {
+      ponerModo(true);
+      if (video) {
+        video.marcar(op);
+        if (opciones && !como.sinSaltar) video.irA(op.color, op.mat, !("color" in opciones));
+      }
+      return;
+    }
+    ponerModo(false);
     const obj = await construir(p, op);
     if (mia !== peticion) {
       liberar(obj);
@@ -1174,7 +1459,10 @@ function iniciarVisor(ui) {
     renderer.render(escena, camara);
     if (primero) primero = false;
   }
-  cuandoVisible(host, (v) => renderer.setAnimationLoop(v ? cuadro : null));
+  cuandoVisible(host, (v) => {
+    visible3d = v;
+    bucle();
+  });
 
   return { seleccionar };
 }
@@ -1189,21 +1477,36 @@ function hayWebGL() {
   }
 }
 
-async function iniciar() {
+function elementosDelVisor() {
   const $ = (id) => document.getElementById(id);
-  const ui = {
+  return {
     escena: $("visor-escena"), chips: $("visor-chips"), categoria: $("visor-categoria"),
     nombre: $("visor-nombre"), desc: $("visor-desc"), whatsapp: $("visor-whatsapp"),
     girar: $("visor-girar"), reiniciar: $("visor-reiniciar"), acercar: $("visor-acercar"),
     alejar: $("visor-alejar"), pista: $("visor-pista"), anuncio: $("visor-anuncio"),
     precio: $("visor-precio"), variantes: $("visor-variantes"), nota: document.querySelector(".visor__nota"),
     agregar: $("visor-agregar"),
+    video: $("visor-video"), capitulos: $("visor-capitulos"), videoPausa: $("visor-video-pausa"),
+    videoGrande: $("visor-video-grande"), videoColor: $("visor-video-color"), videoVer: $("visor-video-ver"),
   };
+}
+
+// Sin 3D el video sigue funcionando
+function soloVideo() {
+  document.documentElement.classList.add("sin-3d");
+  const ui = elementosDelVisor();
+  const v = ui.video && ui.video.querySelector("video");
+  if (v && !v.dataset.listo) iniciarVideo(ui);
+}
+
+async function iniciar() {
+  const ui = elementosDelVisor();
+  const video = iniciarVideo(ui);
 
   // Que la etiqueta de la vela salga con las letras de la marca
   await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]);
 
-  const visor = ui.escena ? iniciarVisor(ui) : null;
+  const visor = ui.escena ? iniciarVisor(ui, video) : null;
   const ver = (id, opciones) => {
     if (visor) visor.seleccionar(id, opciones);
     const destino = document.getElementById("showroom");
@@ -1223,8 +1526,8 @@ async function iniciar() {
 if (hayWebGL()) {
   iniciar().catch((e) => {
     console.error("No se pudo iniciar el 3D:", e);
-    document.documentElement.classList.add("sin-3d");
+    soloVideo();
   });
 } else {
-  document.documentElement.classList.add("sin-3d");
+  soloVideo();
 }

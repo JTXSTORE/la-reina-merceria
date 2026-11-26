@@ -11,8 +11,10 @@ css/estilos.css   colores, tipografía y diseño
 js/main.js        menú móvil, enlaces de WhatsApp, aviso de temporada, tarjetas que se inclinan
 js/productos.js   los productos de la vitrina (nombre, precio, foto, publicación de Instagram)
 js/vitrina.js     vitrina con filtros y la vista de cerca para girar cada producto
-js/tienda3d.js    productos en 3D (portada flotante y showroom «Tómalo en tus manos»)
+js/tienda3d.js    productos en 3D (portada flotante y showroom «Tómalo en tus manos») y el video del showroom
+video/            video del set de trébol (AV1 + H.264) y su portada
 img/productos/    fotos de la vitrina (WebP, tomadas de @mercerialareina2)
+servidor_local.py para ver la página en la computadora (con saltos en el video)
 img/favicon.svg   ícono de la pestaña
 ```
 
@@ -36,6 +38,22 @@ En el showroom «Tómalo en tus manos» hay tres productos de la tienda modelado
 (`js/tienda3d.js`): la greca de 3 tazas (6 colores), el set collar y topos de trébol, y el collar chicle
 (rojo vino, ámbar o marrón, con dije de caracol, corazón o estrella de mar). En `js/productos.js`, el campo
 `tres: { id, opciones }` pone el botón «Ver en 3D» en la vitrina.
+
+## Video del set de trébol (showroom)
+
+El showroom abre con el video del set de trébol (`video/`), rehecho a partir del reel de la tienda del
+25 de noviembre de 2026: formato 4:5 a 1080×1350 sin franjas negras, sin las transiciones que giraban el cuadro,
+con las tarjetas de producto limpias (se promediaron sus cuadros para quitar el ruido de compresión) y un
+acercamiento lento de cámara. No lleva sonido: la canción del reel tiene derechos de autor.
+
+- `video/trebol-av1.mp4` (AV1, más liviano) y `video/trebol.mp4` (H.264, para los navegadores que no tienen AV1).
+- `video/trebol-poster.webp` es la imagen que se ve antes de que cargue.
+- Solo se descarga cuando la persona se acerca al showroom, se pausa cuando sale de la pantalla y no arranca solo si
+  la persona tiene «reducir movimiento» o el ahorro de datos activado.
+- Los colores del panel llevan el video a ese color y lo dejan quieto; el botón de abajo («Elegir») toma el color
+  que se está viendo. Los tramos de cada color están en `CAPITULOS`, al inicio de `js/tienda3d.js`; si se cambia el
+  video hay que actualizar esos tiempos.
+- Las miniaturas `img/productos/mini/trebol-<color>-<material>.webp` son las fotos que salen en «Mi pedido».
 
 ## Mi pedido (por WhatsApp)
 
@@ -67,13 +85,14 @@ carrusel no avanza solo (tiene botón de pausa).
 
 ## Verla en la computadora
 
-Abrir `index.html` con doble clic, o levantar un servidor local:
+Levantar el servidor local que viene con la página:
 
 ```
-python -m http.server 4180
+python servidor_local.py
 ```
 
-y entrar a http://localhost:4180
+y entrar a http://localhost:4180. (Con `python -m http.server` la página abre, pero los colores del video no
+llevan a su tramo: ese servidor no deja saltar dentro de los videos.)
 
 ## Publicar en GitHub Pages
 

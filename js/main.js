@@ -163,6 +163,16 @@
   setTimeout(function () {
     var raiz = document.documentElement;
     if (!raiz.classList.contains("tres-listo")) raiz.classList.add("sin-3d");
+    // y si ni siquiera cargó el código del visor, el video queda con los controles del navegador
+    var video = document.getElementById("visor-video-el");
+    if (video && !video.dataset.listo) {
+      video.controls = true;
+      video.preload = "metadata";
+      var caja = document.getElementById("visor-video");
+      if (caja) caja.classList.remove("en-espera");
+      var propios = document.querySelector(".visor__controles--video");
+      if (propios) propios.hidden = true;
+    }
   }, 12000);
 
   // Año del pie
