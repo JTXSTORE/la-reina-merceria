@@ -1049,40 +1049,164 @@ const rebote = (x) => {
   return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
 };
 
-/* ---------------- Portada: productos flotando ---------------- */
+/* ---------------- Portada: productos reales de la tienda ---------------- */
+// Fotos de productos de @mercerialareina2 sin fondo (img/portada/<id>.webp) con su mapa de relieve
+// (<id>-relieve.png): cada foto se levanta en 3D como una pieza con volumen que flota y se mece.
+// «ver» dice qué abre al tocarla: el showroom (tres) o la vista de cerca de la vitrina (vitrina).
 
-const DISPOSICION = [
-  { id: "carrete", pos: [-1.4, 0.95, 0], tam: 1.55, rot: [0.25, 0.4, 0.3] },
-  { id: "flor", pos: [1.45, 1.05, 0.3], tam: 1.2, rot: [0.15, -0.3, 0.2] },
-  { id: "vela", pos: [0.2, -0.05, 0.6], tam: 1.45, rot: [0.12, 0, 0] },
-  { id: "jabon", pos: [1.55, -1.1, 0], tam: 1.35, rot: [0.2, -0.4, 0.1] },
-  { id: "boton", pos: [-1.45, -0.95, 0.35], tam: 1.25, rot: [0.1, 0.35, 0] },
-  { id: "chicle", pos: [-0.1, -1.65, -0.4], tam: 1.55, rot: [-0.35, 0, 0.08] },
-  { id: "greca", pos: [0.1, 1.55, -1.3], tam: 1.2, rot: [0.1, 0.5, 0] },
+const PIEZAS_PORTADA = [
+  { id: "chicle", nombre: "collar chicle con dije de corazón", pos: [0.05, -0.12, 0.5], alto: 2.54, grosor: 0.26, brillo: 0.22, rot: 0,
+    ver: { tres: "chicle", opciones: { color: "vino", dije: "corazon" } } },
+  { id: "hilo", nombre: "hilo Madame Tricote Maxi", pos: [-1.62, 1.2, 0.1], alto: 1.35, grosor: 0.4, brillo: 0.04, rot: -0.12,
+    ver: { vitrina: "Hilo Madame Tricote Maxi" } },
+  { id: "greca", nombre: "greca rosada", pos: [1.58, 1.24, -0.1], alto: 1.62, grosor: 0.26, brillo: 0.32, rot: 0.1,
+    ver: { tres: "greca", opciones: { color: "rosado" } } },
+  { id: "trebol", nombre: "set de trébol en su tarjeta", pos: [-1.82, -0.36, -0.3], alto: 1.73, grosor: 0.025, brillo: 0.14, rot: -0.14,
+    ver: { tres: "trebol-video", opciones: { color: "verde", mat: "acero" } } },
+  { id: "dijes", nombre: "maxi dijes de corazón", pos: [1.82, -0.1, 0], alto: 1.51, grosor: 0.05, brillo: 0.45, rot: 0.12,
+    ver: { vitrina: "Maxi dijes de aluminio" } },
+  { id: "yute", nombre: "cordón de yute", pos: [-1.15, -1.48, 0.35], alto: 1.06, grosor: 0.48, brillo: 0, rot: 0.06,
+    ver: { vitrina: "Cordón de yute natural" } },
+  { id: "abanico", nombre: "abanico de flores", pos: [1.32, -1.42, 0.25], alto: 1.51, grosor: 0.05, brillo: 0.08, rot: -0.16,
+    ver: { vitrina: "Abanico vintage de flores" } },
 ];
 
-function iniciarPortada(host, alElegir) {
+function cargarImagen(url) {
+  return new Promise((ok, mal) => {
+    const im = new Image();
+    im.decoding = "async";
+    im.onload = () => ok(im);
+    im.onerror = () => mal(new Error("No se pudo cargar " + url));
+    im.src = url;
+  });
+}
+
+// Mapa de relieve (0 = fuera de la pieza, 1 = lo más alto), con lectura bilineal por coordenada uv
+function leerRelieve(im) {
+  const c = document.createElement("canvas");
+  c.width = im.width;
+  c.height = im.height;
+  const ctx = c.getContext("2d", { willReadFrequently: true });
+  ctx.drawImage(im, 0, 0);
+  const datos = ctx.getImageData(0, 0, c.width, c.height).data;
+  const W = c.width;
+  const H = c.height;
+  const val = new Float32Array(W * H);
+  for (let i = 0; i < val.length; i++) val[i] = datos[i * 4] / 255;
+  return (u, v) => {
+    const x = THREE.MathUtils.clamp(u, 0, 1) * (W - 1);
+    const y = (1 - THREE.MathUtils.clamp(v, 0, 1)) * (H - 1);
+    const x0 = Math.floor(x);
+    const y0 = Math.floor(y);
+    const x1 = Math.min(x0 + 1, W - 1);
+    const y1 = Math.min(y0 + 1, H - 1);
+    const fx = x - x0;
+    const fy = y - y0;
+    return (val[y0 * W + x0] * (1 - fx) + val[y0 * W + x1] * fx) * (1 - fy)
+      + (val[y1 * W + x0] * (1 - fx) + val[y1 * W + x1] * fx) * fy;
+  };
+}
+
+function geometriaConRelieve(ancho, alto, relieve, profundidad, segmentos) {
+  const sx = Math.max(8, Math.round(segmentos * Math.min(1, ancho / alto)));
+  const sy = Math.max(8, Math.round(segmentos * Math.min(1, alto / ancho)));
+  const g = new THREE.PlaneGeometry(ancho, alto, sx, sy);
+  const pos = g.attributes.position;
+  const uv = g.attributes.uv;
+  for (let i = 0; i < pos.count; i++) pos.setZ(i, relieve(uv.getX(i), uv.getY(i)) * profundidad);
+  g.computeVertexNormals();
+  return g;
+}
+
+// La foto conserva sus colores tal cual; la luz solo agrega el volumen y un brillo según la pieza
+const SOMBRA_FOTO = {
+  vertexShader: `
+    varying vec2 vUv;
+    varying vec3 vN;
+    varying vec3 vV;
+    void main() {
+      vUv = uv;
+      vec4 mv = modelViewMatrix * vec4(position, 1.0);
+      vN = normalize(normalMatrix * normal);
+      vV = -mv.xyz;
+      gl_Position = projectionMatrix * mv;
+    }`,
+  fragmentShader: `
+    uniform sampler2D mapa;
+    uniform vec3 luz;
+    uniform float brillo;
+    uniform float foco;
+    uniform float atras;
+    uniform float opacidad;
+    varying vec2 vUv;
+    varying vec3 vN;
+    varying vec3 vV;
+    void main() {
+      vec4 c = texture2D(mapa, vUv);
+      float a = c.a * opacidad;
+      if (a < 0.03) discard;
+      vec3 n = normalize(vN) * (gl_FrontFacing ? 1.0 : -1.0);
+      vec3 v = normalize(vV);
+      vec3 l = normalize(luz);
+      // la foto ya trae su propia luz: el volumen solo matiza un poco
+      float relieve = clamp(1.0 + 0.32 * (dot(n, l) - dot(v, l)), 0.88, 1.1);
+      float borde = mix(0.9, 1.0, smoothstep(0.0, 0.5, abs(dot(n, v))));
+      float esp = pow(max(dot(n, normalize(l + v)), 0.0), 48.0) * brillo;
+      vec3 col = c.rgb * relieve * borde * (gl_FrontFacing ? 1.0 : atras) + esp + foco * 0.045;
+      gl_FragColor = vec4(col * a, a);
+    }`,
+};
+
+async function iniciarPortada(host, alElegir) {
+  const cargas = await Promise.all(PIEZAS_PORTADA.map(async (d) => {
+    const [foto, mapa] = await Promise.all([
+      cargarImagen("img/portada/" + d.id + ".webp"),
+      cargarImagen("img/portada/" + d.id + "-relieve.png"),
+    ]);
+    return { d, foto, relieve: leerRelieve(mapa) };
+  }));
+
+  const nombres = PIEZAS_PORTADA.map((d) => d.nombre);
   const renderer = crearRenderer(host,
-    "Productos de La Reina Mercería en 3D: hilo, botones, vela, jabón, collar chicle, flor dorada y greca. Toca uno para verlo de cerca.");
+    "Productos reales de La Reina Mercería: " + nombres.slice(0, -1).join(", ") + " y " + nombres[nombres.length - 1]
+    + ". Toca uno para verlo de cerca.");
   const escena = new THREE.Scene();
-  escena.environment = entorno(renderer);
   const camara = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
   camara.position.set(0, 0, 8);
-
-  const sol = new THREE.DirectionalLight(0xfff1e4, 1.8);
-  sol.position.set(3, 5, 5);
-  escena.add(sol, new THREE.HemisphereLight(0xfff0f6, 0xdff0d0, 0.7));
+  const anisotropia = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  const luz = new V3(-0.45, 0.6, 0.66);
 
   const grupo = new THREE.Group();
   escena.add(grupo);
-  const piezas = DISPOSICION.map((d, i) => {
-    const p = PRODUCTOS.find((x) => x.id === d.id);
-    const obj = p.crear();
-    if (p.pose) obj.rotation.set(...p.pose);
-    const pieza = encuadrar(obj, d.tam);
+  const mallas = [];
+  const piezas = cargas.map(({ d, foto, relieve }, i) => {
+    const tex = new THREE.Texture(foto);
+    tex.anisotropy = anisotropia;
+    tex.needsUpdate = true;
+    const ancho = d.alto * (foto.width / foto.height);
+    const prof = d.grosor * d.alto;
+    const uniformes = {
+      mapa: { value: tex }, luz: { value: luz }, brillo: { value: d.brillo },
+      foco: { value: 0 }, atras: { value: 0.9 }, opacidad: { value: MOV_REDUCIDO ? 1 : 0 },
+    };
+    const material = new THREE.ShaderMaterial({
+      uniforms: uniformes, vertexShader: SOMBRA_FOTO.vertexShader, fragmentShader: SOMBRA_FOTO.fragmentShader,
+      side: THREE.DoubleSide, transparent: true, premultipliedAlpha: true,
+    });
+    const pieza = new THREE.Group();
+    const segs = d.grosor > 0.1 ? 110 : 60;
+    // frente con su volumen y espalda un poco más plana: juntas forman una pieza cerrada
+    for (const lado of [1, -0.8]) {
+      const malla = new THREE.Mesh(geometriaConRelieve(ancho, d.alto, relieve, prof * lado, segs), material);
+      malla.userData.pieza = pieza;
+      pieza.add(malla);
+      mallas.push(malla);
+    }
     pieza.position.set(...d.pos);
-    pieza.rotation.set(...d.rot);
-    Object.assign(pieza.userData, { id: d.id, baseY: d.pos[1], fase: i * 1.3, giro: 0.12 + (i % 3) * 0.06, foco: 0 });
+    pieza.rotation.z = d.rot;
+    Object.assign(pieza.userData, {
+      d, relieve, uniformes, baseY: d.pos[1], fase: i * 1.37, foco: 0, entrada: MOV_REDUCIDO ? 1 : 0, demora: i * 0.09,
+    });
     grupo.add(pieza);
     return pieza;
   });
@@ -1095,52 +1219,59 @@ function iniciarPortada(host, alElegir) {
   const ndc = new V2();
   const rayo = new THREE.Raycaster();
   let dentro = false;
-
   const aNdc = (e) => {
     const r = renderer.domElement.getBoundingClientRect();
     dentro = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
     ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
   };
+  // solo cuenta si se toca el producto, no el hueco transparente de la foto
   const piezaBajo = () => {
     rayo.setFromCamera(ndc, camara);
-    const toque = rayo.intersectObjects(piezas, true)[0];
-    let o = toque ? toque.object : null;
-    while (o && !o.userData.id) o = o.parent;
-    return o;
+    for (const toque of rayo.intersectObjects(mallas, false)) {
+      const pz = toque.object.userData.pieza;
+      if (toque.uv && pz.userData.relieve(toque.uv.x, toque.uv.y) > 0.03) return pz;
+    }
+    return null;
   };
-
   window.addEventListener("pointermove", (e) => {
     puntero.set((e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1);
     aNdc(e);
   }, { passive: true });
-
   renderer.domElement.addEventListener("click", (e) => {
     aNdc(e);
     const p = piezaBajo();
-    if (p) alElegir(p.userData.id);
+    if (p) alElegir(p.userData.d.ver);
   });
 
+  const raiz = document.documentElement;
   let t = 0;
   let previo = null;
   let primero = true;
+  let reloj = 0;   // corre desde que se quita la pantalla de carga, para la entrada de las piezas
   function cuadro(ahora) {
     const dt = previo === null ? 1 / 60 : Math.min((ahora - previo) / 1000, 0.05);
     previo = ahora;
     t += dt;
+    if (!raiz.classList.contains("cargando")) reloj += dt;
     const sobre = dentro ? piezaBajo() : null;
     renderer.domElement.style.cursor = sobre ? "pointer" : "";
     for (const p of piezas) {
       const u = p.userData;
+      if (u.entrada < 1) u.entrada = THREE.MathUtils.clamp((reloj - 0.35 - u.demora) / 0.9, 0, 1);
+      const e = u.entrada;
+      const sube = 1 - Math.pow(1 - e, 3);
       if (!MOV_REDUCIDO) {
-        p.position.y = u.baseY + Math.sin(t * 0.9 + u.fase) * 0.09;
-        p.rotation.y += dt * u.giro;
+        p.position.y = u.baseY + Math.sin(t * 0.8 + u.fase) * 0.07 - (1 - sube) * 0.45;
+        p.rotation.y = Math.sin(t * 0.45 + u.fase) * 0.34 + (1 - sube) * 0.9;
+        p.rotation.x = Math.sin(t * 0.37 + u.fase * 1.7) * 0.07;
       }
       u.foco += ((p === sobre ? 1 : 0) - u.foco) * 0.15;
-      p.scale.setScalar(u.escala * (1 + u.foco * 0.12));
-      if (u.actualizar) u.actualizar(t);
+      p.scale.setScalar((0.82 + 0.18 * (e < 1 ? rebote(e) : 1)) * (1 + u.foco * 0.07));
+      u.uniformes.foco.value = u.foco;
+      u.uniformes.opacidad.value = Math.min(1, e * 1.6);
     }
-    const objX = MOV_REDUCIDO ? 0 : puntero.y * 0.16;
-    const objY = MOV_REDUCIDO ? 0 : puntero.x * 0.28;
+    const objX = MOV_REDUCIDO ? 0 : puntero.y * 0.14;
+    const objY = MOV_REDUCIDO ? 0 : puntero.x * 0.26;
     grupo.rotation.x += (objX - grupo.rotation.x) * 0.05;
     grupo.rotation.y += (objY - grupo.rotation.y) * 0.05;
     renderer.render(escena, camara);
@@ -1513,12 +1644,21 @@ async function iniciar() {
     if (destino) destino.scrollIntoView({ behavior: MOV_REDUCIDO ? "auto" : "smooth" });
   };
 
+  // Portada: tocar una pieza abre el showroom o la vista de cerca de la vitrina
   const portada = document.querySelector(".portada__3d");
-  if (portada) iniciarPortada(portada, ver);
+  const elegir = (destino) => {
+    if (destino.tres) ver(destino.tres, destino.opciones);
+    else if (destino.vitrina && window.LaReinaVitrina) window.LaReinaVitrina.abrir(destino.vitrina);
+  };
+  const portadaLista = portada
+    ? iniciarPortada(portada, elegir).catch((e) => console.warn("No se pudo armar la portada:", e))
+    : Promise.resolve();
 
   window.laReina3D = { seleccionar: (id, opciones) => visor && visor.seleccionar(id, opciones), ver };
   const pendiente = window.__ver3dPendiente;
   if (visor) await visor.seleccionar(pendiente ? pendiente.id || pendiente : PRODUCTOS[0].id, pendiente && pendiente.opciones);
+  // que la pantalla de carga cubra también las fotos de la portada (sin esperar de más)
+  await Promise.race([portadaLista, new Promise((r) => setTimeout(r, 3500))]);
   document.documentElement.classList.remove("sin-3d");
   document.documentElement.classList.add("tres-listo");
 }

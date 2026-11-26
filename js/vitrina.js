@@ -476,4 +476,15 @@
     animando = true;
     requestAnimationFrame(cuadro);
   }
+
+  // Para abrir un producto desde otra parte de la página (las piezas de la portada)
+  window.LaReinaVitrina = {
+    abrir: function (nombre) {
+      var i = -1;
+      PRODUCTOS.forEach(function (p, k) { if (i < 0 && p.nombre === nombre) i = k; });
+      if (i < 0) return false;
+      abrir(i, document.activeElement);
+      return true;
+    },
+  };
 })();

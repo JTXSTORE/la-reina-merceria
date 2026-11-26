@@ -11,9 +11,10 @@ css/estilos.css   colores, tipografía y diseño
 js/main.js        menú móvil, enlaces de WhatsApp, aviso de temporada, tarjetas que se inclinan
 js/productos.js   los productos de la vitrina (nombre, precio, foto, publicación de Instagram)
 js/vitrina.js     vitrina con filtros y la vista de cerca para girar cada producto
-js/tienda3d.js    productos en 3D (portada flotante y showroom «Tómalo en tus manos») y el video del showroom
+js/tienda3d.js    portada con productos reales en 3D, showroom «Tómalo en tus manos» y su video
 video/            video del set de trébol (AV1 + H.264) y su portada
 img/productos/    fotos de la vitrina (WebP, tomadas de @mercerialareina2)
+img/portada/      productos reales sin fondo y su relieve, para la portada
 servidor_local.py para ver la página en la computadora (con saltos en el video)
 img/favicon.svg   ícono de la pestaña
 ```
@@ -38,6 +39,19 @@ En el showroom «Tómalo en tus manos» hay tres productos de la tienda modelado
 (`js/tienda3d.js`): la greca de 3 tazas (6 colores), el set collar y topos de trébol, y el collar chicle
 (rojo vino, ámbar o marrón, con dije de caracol, corazón o estrella de mar). En `js/productos.js`, el campo
 `tres: { id, opciones }` pone el botón «Ver en 3D» en la vitrina.
+
+## Portada con productos reales
+
+En la portada flotan siete productos de la tienda sacados de sus fotos de Instagram en la mejor resolución
+que había (hasta 1200×1600): hilo Madame Tricote Maxi, greca rosada, collar chicle en su busto, set de trébol en
+su tarjeta, maxi dijes de corazón, cordón de yute y abanico. A cada foto se le quitó el fondo y se le hizo un
+mapa de relieve, con el que el navegador la levanta en 3D (la pieza tiene volumen, se mece y le da la luz).
+
+- `img/portada/<id>.webp`: la foto sin fondo (720 px de lado mayor).
+- `img/portada/<id>-relieve.png`: el relieve (blanco = lo más alto).
+- En `js/tienda3d.js`, `PIEZAS_PORTADA` dice dónde va cada pieza, su tamaño, cuánto volumen tiene (`grosor`),
+  cuánto brilla y qué abre al tocarla: el showroom (`tres`) o la vista de cerca de la vitrina (`vitrina`, por
+  el nombre exacto del producto en `js/productos.js`).
 
 ## Video del set de trébol (showroom)
 

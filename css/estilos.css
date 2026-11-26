@@ -320,7 +320,8 @@ a { color: var(--magenta); }
 }
 .portada__3d canvas { display: block; width: 100%; height: 100%; }
 .portada__3d.listo { opacity: 1; }
-.ilustracion { transition: opacity 600ms ease; }
+/* el dibujo de respaldo es decorativo: no debe quedarse con los toques del 3D que está debajo */
+.ilustracion { transition: opacity 600ms ease; pointer-events: none; }
 .portada__3d.listo + .ilustracion { opacity: 0; }
 .portada__pista {
   display: none;

@@ -56,6 +56,8 @@ class ConPartes(SimpleHTTPRequestHandler):
     def end_headers(self):
         if not self.headers.get("Range"):
             self.send_header("Accept-Ranges", "bytes")
+        # en la computadora siempre se ve lo último que se guardó (sin copias viejas del navegador)
+        self.send_header("Cache-Control", "no-cache")
         super().end_headers()
 
 
