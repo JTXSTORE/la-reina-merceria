@@ -1053,13 +1053,14 @@ const rebote = (x) => {
 // Fotos de productos de @mercerialareina2 sin fondo (img/portada/<id>.webp) con su mapa de relieve
 // (<id>-relieve.png): cada foto se levanta en 3D como una pieza con volumen que flota y se mece.
 // «ver» dice qué abre al tocarla: el showroom (tres) o la vista de cerca de la vitrina (vitrina).
+// «grosor» es el volumen hacia adelante (fracción del alto); en la greca y el hilo es su radio real (cilindro).
 
 const PIEZAS_PORTADA = [
   { id: "chicle", nombre: "collar chicle con dije de corazón", pos: [0.05, -0.12, 0.5], alto: 2.54, grosor: 0.26, brillo: 0.22, rot: 0,
     ver: { tres: "chicle", opciones: { color: "vino", dije: "corazon" } } },
-  { id: "hilo", nombre: "hilo Madame Tricote Maxi", pos: [-1.62, 1.2, 0.1], alto: 1.35, grosor: 0.4, brillo: 0.04, rot: -0.12,
+  { id: "hilo", nombre: "hilo Madame Tricote Maxi", pos: [-1.62, 1.2, 0.1], alto: 1.35, grosor: 0.418, espalda: 1, brillo: 0.04, rot: -0.04,
     ver: { vitrina: "Hilo Madame Tricote Maxi" } },
-  { id: "greca", nombre: "greca rosada", pos: [1.58, 1.24, -0.1], alto: 1.62, grosor: 0.26, brillo: 0.32, rot: 0.1,
+  { id: "greca", nombre: "greca rosada", pos: [1.58, 1.24, -0.1], alto: 1.62, grosor: 0.258, espalda: 1, brillo: 0.32, rot: 0.03,
     ver: { tres: "greca", opciones: { color: "rosado" } } },
   { id: "trebol", nombre: "set de trébol en su tarjeta", pos: [-1.82, -0.36, -0.3], alto: 1.73, grosor: 0.025, brillo: 0.14, rot: -0.14,
     ver: { tres: "trebol-video", opciones: { color: "verde", mat: "acero" } } },
@@ -1195,8 +1196,8 @@ async function iniciarPortada(host, alElegir) {
     });
     const pieza = new THREE.Group();
     const segs = d.grosor > 0.1 ? 110 : 60;
-    // frente con su volumen y espalda un poco más plana: juntas forman una pieza cerrada
-    for (const lado of [1, -0.8]) {
+    // frente con su volumen y espalda (más plana, o igual en las piezas cilíndricas): juntas forman una pieza cerrada
+    for (const lado of [1, -(d.espalda || 0.8)]) {
       const malla = new THREE.Mesh(geometriaConRelieve(ancho, d.alto, relieve, prof * lado, segs), material);
       malla.userData.pieza = pieza;
       pieza.add(malla);

@@ -46,6 +46,8 @@ En la portada flotan siete productos de la tienda sacados de sus fotos de Instag
 que había (hasta 1200×1600): hilo Madame Tricote Maxi, greca rosada, collar chicle en su busto, set de trébol en
 su tarjeta, maxi dijes de corazón, cordón de yute y abanico. A cada foto se le quitó el fondo y se le hizo un
 mapa de relieve, con el que el navegador la levanta en 3D (la pieza tiene volumen, se mece y le da la luz).
+La greca y el hilo usan relieve de cilindro (cada fila se curva como un tubo, como el objeto real), así no se
+deforman al girar.
 
 - `img/portada/<id>.webp`: la foto sin fondo (720 px de lado mayor).
 - `img/portada/<id>-relieve.png`: el relieve (blanco = lo más alto).
